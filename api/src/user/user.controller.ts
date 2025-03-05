@@ -13,6 +13,7 @@ export class UserController {
 
   @Get()
   findAll() {
+    'hello'
     return this.userService.findAll();
   }
 
