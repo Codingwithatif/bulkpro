@@ -1,0 +1,31 @@
+<div class="sell-product-container">
+  <h2>Sell Product</h2>
+
+  <!-- Scanner Section -->
+  <div class="scanner-section">
+    <h3>Scan Product Barcode</h3>
+    <div class="scanner-wrapper">
+      <video id="video" width="100%" height="auto" class="scanner-video" autoplay></video>
+    </div>
+  </div>
+
+  <!-- Loading/Result Section -->
+  <div class="result-section">
+    <!-- Display loading state while scanning -->
+    <div *ngIf="loading" class="loading-state">
+      <p>Loading...</p>
+    </div>
+    
+    <!-- Display scanned result -->
+    <p *ngIf="result" class="scanned-result">
+      <strong>Scanned Result:</strong> <span>{{ result }}</span>
+    </p>
+  </div>
+
+  <!-- Action Section -->
+  <div class="action-section">
+    <button *ngIf="result" (click)="resetScanner()" class="reset-button">
+      Reset Scanner
+    </button>
+  </div>
+</div>

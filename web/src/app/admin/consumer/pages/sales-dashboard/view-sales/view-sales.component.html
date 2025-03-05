@@ -1,0 +1,30 @@
+<div *ngIf="loading">Loading sales records...</div>
+<div *ngIf="error" class="error">{{ error }}</div>
+
+<div *ngIf="!loading && sales.length > 0">
+  <h3>Total Sales Overall: {{ totalSales | currency }}</h3>
+  <h3>Total Daily Sales: {{ totalDailySales | currency }}</h3>
+
+  <table class="sales-table">
+    <thead>
+      <tr>
+        <th>Product ID</th>
+        <th>Quantity</th>
+        <th>Total Price</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let sale of sales">
+        <td>{{ sale.productId }}</td>
+        <td>{{ sale.quantity }}</td>
+        <td>{{ sale.totalPrice | currency }}</td>
+        <td>{{ sale.date | date: 'short' }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div *ngIf="!loading && sales.length === 0">
+  No sales records found.
+</div>

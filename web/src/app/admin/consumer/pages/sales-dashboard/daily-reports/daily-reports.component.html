@@ -1,0 +1,37 @@
+<div class="daily-reports-container">
+  <h1>Sales Reports</h1>
+
+  <!-- View Type Toggle -->
+  <div class="view-toggle">
+    <button (click)="toggleView('daily')" [class.active]="viewType === 'daily'">Daily View</button>
+    <button (click)="toggleView('monthly')" [class.active]="viewType === 'monthly'">Monthly View</button>
+  </div>
+
+  <div *ngIf="isLoading" class="loading">Loading...</div>
+
+  <!-- Sales Data Table -->
+  <table *ngIf="!isLoading" class="sales-table">
+    <thead>
+      <tr>
+        <th>Product Name</th>
+        <th>Quantity</th>
+        <th>Total Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let sale of salesData">
+        <td>{{ sale.productName }}</td>
+        <td>{{ sale.quantity }}</td>
+        <td>{{ sale.totalPrice | currency }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Total Sales -->
+  <div *ngIf="!isLoading" class="total-sales">
+    <strong>Total Sales:</strong> {{ totalSales | currency }}
+  </div>
+</div>
+
+
+

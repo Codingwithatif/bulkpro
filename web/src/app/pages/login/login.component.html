@@ -1,0 +1,82 @@
+<div class="container d-flex justify-content-center align-items-center vh-100">
+  <div class="row justify-content-center">
+    <div class="col-lg-10">
+      <div class="card shadow-lg border-0 rounded-lg">
+        <div class="row g-0">
+          <!-- Image Section -->
+          <div class="col-md-6">
+            <img
+              src="img/banner.webp"
+              alt="Goods Delivery Banner"
+              class="img-fluid h-100 rounded-start"
+              style="object-fit: cover;"
+            />
+          </div>
+          <!-- Login Form Section -->
+          <div class="col-md-6">
+            <div class="card-body p-5">
+              <h2 class="text-center font-weight-light mb-4">Login</h2>
+              <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+                <div class="form-group mb-4">
+                  <label for="email" class="form-label">Email:</label>
+                  <input
+                    type="email"
+                    id="email"
+                    formControlName="email"
+                    class="form-control form-control-lg"
+                    placeholder="Enter your email"
+                    autocomplete="off"
+                    [class.is-invalid]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
+                    required
+                  />
+                  <div
+                    *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
+                    class="invalid-feedback"
+                  >
+                    Please enter a valid email.
+                  </div>
+                </div>
+                <div class="form-group mb-4">
+                  <label for="password" class="form-label">Password:</label>
+                  <input
+                    type="password"
+                    id="password"
+                    formControlName="password"
+                    class="form-control form-control-lg"
+                    placeholder="Enter your password"
+                    [class.is-invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+                    required
+                  />
+                  <div
+                    *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+                    class="invalid-feedback"
+                  >
+                    Password is required.
+                  </div>
+                </div>
+                <button
+                  type="submit"
+                  class="btn btn-primary btn-block btn-lg mt-3 w-100"
+                  [disabled]="loginForm.invalid || loading"
+                >
+                  Login
+                </button>
+                <!-- Loader -->
+                <div *ngIf="loading" class="text-center mt-3 loader-container">
+                  <div class="dot"></div>
+                  <div class="dot"></div>
+                  <div class="dot"></div>
+                </div>
+              </form>
+              <div class="text-center mt-4">
+                <div class="small">
+                  <a href="/register">Need an account? Register here!</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

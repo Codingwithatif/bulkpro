@@ -1,0 +1,66 @@
+<div class="sell-products-container">
+    <h2 class="title">Sell Product</h2>
+  
+    <form [formGroup]="sellForm" (ngSubmit)="sellProduct()" class="sell-form">
+      
+      <!-- Select Product -->
+      <div class="form-group">
+        <label for="product">Select Product:</label>
+        <select 
+          id="product" 
+          formControlName="productId" 
+          (change)="onProductChange(sellForm.value.productId)" 
+          class="form-control product-select">
+          <option value="" disabled selected>Select a product</option>
+          <option *ngFor="let product of products" [value]="product.id">
+            {{ product.name }}
+          </option>
+        </select>
+      </div>
+  
+      <!-- Quantity -->
+      <div class="form-group">
+        <label for="quantity">Quantity:</label>
+        <input 
+          type="number" 
+          id="quantity" 
+          formControlName="quantity" 
+          (input)="onQuantityChange()" 
+          class="form-control" 
+          min="1" />
+      </div>
+  
+      <!-- Delivery Location -->
+      <div class="form-group">
+        <label for="deliveryLocation">Delivery Location:</label>
+        <input 
+          type="text" 
+          id="deliveryLocation" 
+          formControlName="deliveryLocation" 
+          class="form-control" 
+          placeholder="Enter delivery location" />
+      </div>
+  
+      <!-- Total Price -->
+      <div class="form-group">
+        <label for="totalPrice">Total Price:</label>
+        <input 
+          type="text" 
+          id="totalPrice" 
+          formControlName="totalPrice" 
+          class="form-control" 
+          [value]="totalPrice" 
+          readonly />
+      </div>
+  
+      <!-- Submit Button -->
+      <button 
+        type="submit" 
+        class="btn btn-primary" 
+        [disabled]="sellForm.invalid">
+        <i class="fas fa-truck"></i> Deliver Product
+      </button>
+  
+    </form>
+  </div>
+  

@@ -1,0 +1,124 @@
+<!-- Main Sidebar Container -->
+
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <!-- SidebarSearch Form -->
+    <div class="form-inline">
+      <div class="input-group" data-widget="sidebar-search">
+        <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
+        <div class="input-group-append">
+          <button class="btn btn-sidebar">
+            <i class="fas fa-search fa-fw"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar Menu -->
+    <nav class="mt-2">
+      <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+        <!-- Manager Section -->
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="nav-icon fas fa-list"></i>
+            <p>
+              Manager
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a [routerLink]="'/admin/consumer/add-category'" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Add Category</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a [routerLink]="'/admin/consumer/add-product'" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Add Product</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a [routerLink]="'/admin/consumer/inventory-management'" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Inventory Management</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a [routerLink]="'/admin/consumer/sales-tracking'" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Sales Tracking</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a [routerLink]="'/admin/consumer/supplier-management'" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Supplier Management</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a [routerLink]="'/admin/consumer/reports'" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Reports</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a [routerLink]="'/admin/consumer/discounts'" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Discounts & Promotions</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+    
+        <!-- Sales Admin Section -->
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="nav-icon fas fa-chart-pie"></i>
+            <p>
+              Sales Admin
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a [routerLink]="'/admin/consumer/sell-product'" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Sell Product</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a [routerLink]="'/admin/consumer/view-sales'" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>View Sales</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a [routerLink]="'/admin/consumer/daily-reports'" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Daily Reports</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a [routerLink]="'/admin/consumer/monthly-reports'" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Monthly Reports</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a [routerLink]="'/admin/consumer/customer-reviews'" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Customer Reviews</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+    
+    <!-- /.sidebar-menu -->
+  </div>
+  <!-- /.sidebar -->
+</aside>

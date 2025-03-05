@@ -1,0 +1,124 @@
+<div class="container-fluid vh-100 d-flex align-items-center justify-content-center">
+  <div class="row w-100 shadow-lg border-0 rounded-lg overflow-hidden" style="max-width: 900px;">
+    <!-- Left Image Section -->
+    <div class="col-lg-6 d-none d-lg-block p-0">
+      <img src="img/banner.webp" alt="Registration Image" class="img-fluid h-100 w-100" style="object-fit: cover;" />
+    </div>
+
+    <!-- Registration Form Section -->
+    <div class="col-lg-6 col-md-12 p-4">
+      <div class="card shadow-lg border-0 rounded-lg">
+        <div class="card-header bg-primary text-white text-center">
+          <h4>Registration Form</h4>
+        </div>
+        <div class="card-body px-5 py-4">
+          <form [formGroup]="registerForm" (ngSubmit)="registerMart(  )">
+
+            <!-- Role Selection as Dropdown -->
+            <div class="mb-4">
+              <label for="role" class="form-label">Register as:</label>
+              <select class="form-select" id="role" formControlName="role" required>
+                <option value="" disabled> -- Select Role --</option>
+                <option value="Mart">Mart</option>
+                <option value="Company">Company</option>
+              </select>
+              
+              <div *ngIf="registerForm.get('role')?.invalid && registerForm.get('role')?.touched" class="invalid-feedback">
+                Role is required.
+              </div>
+            </div>
+
+            <!-- Mart/Company Name -->
+            <div class="mb-4">
+              <label for="martName" class="form-label">{{registerForm.controls['role'].value }} Name</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="martName" 
+                formControlName="martName" 
+                placeholder="Enter your mart or company name" 
+                required>
+              <div *ngIf="registerForm.get('martName')?.invalid && registerForm.get('martName')?.touched" class="invalid-feedback">
+                {{registerForm.controls['role'].value }} Name is required.
+              </div>
+            </div>
+
+            <!-- Email -->
+            <div class="mb-4">
+              <label for="email" class="form-label">Email</label>
+              <input 
+                type="email" 
+                class="form-control" 
+                id="email" 
+                formControlName="email" 
+                placeholder="Enter your email" 
+                required>
+              <div *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" class="invalid-feedback">
+                Please enter a valid email.
+              </div>
+            </div>
+
+            <!-- Phone Number -->
+            <div class="mb-4">
+              <label for="phone" class="form-label">Phone Number</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="phone" 
+                formControlName="phone" 
+                placeholder="Enter your phone number" 
+                required>
+              <div *ngIf="registerForm.get('phone')?.invalid && registerForm.get('phone')?.touched" class="invalid-feedback">
+                Please enter a valid phone number.
+              </div>
+            </div>
+
+            <!-- Address -->
+            <div class="mb-4">
+              <label for="address" class="form-label">Address</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="address" 
+                formControlName="address" 
+                placeholder="Enter your address" 
+                required>
+              <div *ngIf="registerForm.get('address')?.invalid && registerForm.get('address')?.touched" class="invalid-feedback">
+                Address is required.
+              </div>
+            </div>
+
+            <!-- Password -->
+            <div class="mb-4">
+              <label for="password" class="form-label">Password</label>
+              <input 
+                type="password" 
+                class="form-control" 
+                id="password" 
+                formControlName="password" 
+                placeholder="Enter a password" 
+                required>
+              <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" class="invalid-feedback">
+                Password must be at least 6 characters long.
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="d-grid">
+              <button type="submit" class="btn btn-primary btn-block" [disabled]="registerForm.invalid">Register</button>
+            </div>
+            <div *ngIf="loading" class="text-center mt-3 loader-container">
+              <div class="dot"></div>
+              <div class="dot"></div>
+              <div class="dot"></div>
+            </div>
+
+          </form>
+        </div>
+        <div class="card-footer text-center py-3">
+          <span>Already have an account? <a href="/login" class="text-primary">Log in here</a></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
