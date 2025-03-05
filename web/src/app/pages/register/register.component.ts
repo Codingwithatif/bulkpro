@@ -35,19 +35,18 @@ export class RegisterComponent {
    * Registers the user and navigates to the login page upon success.
    */
   registerMart() {
-      const formValue = this.registerForm.value;
+    const formValue = this.registerForm.value;
+    const user = {
+      name: formValue.martName,
+      password: formValue.password,
+      email: formValue.email,
+      // phone: formValue.phone,
+      // address: formValue.address,
+    }
 
-      const user = {
-        name: formValue.martName,
-        password: formValue.password,
-        email: formValue.email,
-        phone: formValue.phone,
-        address: formValue.address,
-      }
-
-      this.http.post('http://localhost:3000/auth/register', user).subscribe(a => {
-        console.log(a)
-      });
+    this.authService.register(user).subscribe(a => {
+      console.log(a)
+    })
       
 }
 

@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { Mart } from '../marts/mart.entity';  // Correct import path for Mart entity
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 export enum UserRole {
   MART = 'mart',
@@ -18,22 +17,18 @@ export class User {
   @Column()
   password: string;
 
-  @Column()
-  name: string;
+  // @Column()
+  // name: string;
 
-  @Column({ type: 'enum', enum: UserRole })
-  role: UserRole;
+ 
 
-  @Column({ nullable: true })
-  address?: string;
+  // @Column({ nullable: true })
+  // address?: string;
 
-  @Column({ nullable: true })
-  phoneNumber?: string;
+  // @Column({ nullable: true })
+  // phoneNumber?: string;
 
-  @Column({ default: true })
-  isActive: boolean;
+  // @Column({ default: true })
+  // isActive: boolean;
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  @OneToMany(() => Mart, (mart: Mart) => mart.owner, { cascade: true })
-  marts: Mart[] | null; // Allow null
 }

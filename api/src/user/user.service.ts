@@ -1,4 +1,6 @@
-import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import { BadRequestException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
@@ -11,23 +13,60 @@ export class UserService {
     private readonly userRepo: Repository<User>,
   ) {}
 
-  async create(createUserDto: any) {
-    if (!createUserDto) {
+  async create(user: any) {
+    if (!user) {
       return {
         status: HttpStatus.BAD_REQUEST,
-        message: 'Invalid data',
+        message: 'not found',
       };
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    const newUser = this.userRepo.create(createUserDto);
-    const result = await this.userRepo.save(newUser);
+    const hello = await this.userRepo.findOne({ where : { email: user.email}});
+
+    if(hello) {
+      return {
+        status: HttpStatus.BAD_REQUEST,
+        message: 'already exist',
+      };
+    }
+
+    // TODO: encypt and decrypt user
+
+// const passtobenecypted = bufferCount.encryp(user.password)
+//     user.passs = passtobenecypted;
+
+    const newUser = this.userRepo.create(user);
+    const result = await this.userRepo.save<User>(newUser);
 
     return {
-      status: HttpStatus.CREATED,
+      status: HttpStatus.OK,
       message: 'User registered successfully',
       data: result,
     };
+  }
+
+  async login(user: any) {
+    const validate = await this.validateUser(user)
+    if(!validate) {
+      return {
+        status: new BadRequestException('wrong credentials')
+      }
+    }
+
+    return {
+      status: HttpStatus.OK,
+      message: 'user foiun'
+    }
+  }  
+
+  async validateUser(user: any) {
+    const found = await this.findOne(user.email);
+
+    if(found.password === user.password) {
+      return true
+    }
+
+    return false;
   }
 
   async findAll() {
@@ -39,16 +78,15 @@ export class UserService {
     };
   }
 
-  async findOne(id: string) {
-    const user = await this.userRepo.findOne({ where: { id } });
+  async findOne(email: string) {
+      if (!email) {
+        throw new NotFoundException(`User with ID ${email} not found`);
+      } 
+    const user = await this.userRepo.findOne({ where: { email: email } });
     if (!user) {
-      throw new NotFoundException(`User with ID ${id} not found`);
+      throw new NotFoundException(`User with ID ${email} not found`);
     }
-    return {
-      status: HttpStatus.OK,
-      message: 'User retrieved successfully',
-      data: user,
-    };
+    return user;
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
