@@ -37,9 +37,9 @@ export class LoginComponent {
       this.http.post<IGenericResponse<IUser>>('http://localhost:3000/user/login', user).subscribe(resp => {
         if(resp.status === HttpStatusCode.Ok) {
           if(resp.data.role === UserRole.MART ) {
-            this.router.navigate(['/admin/consumer/dashbaord'])
+            this.router.navigate(['/admin/consumer'])
           } else if(resp.data.role === UserRole.COMPANY ) {
-            this.router.navigate(['/admin/consumer/dashboard'])
+            this.router.navigate(['/admin/supplier'])
           }
         }
       })
