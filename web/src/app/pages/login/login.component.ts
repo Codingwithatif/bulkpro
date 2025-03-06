@@ -3,7 +3,8 @@ import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../shared/auth.service';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpStatusCode } from '@angular/common/http';
+import { IGenericResponse, IUser, UserRole } from '../../models/auth.model';
 
 @Component({
   selector: 'app-login',
@@ -33,9 +34,14 @@ export class LoginComponent {
         email: email,
         password: password
       }
-      this.http.post('http://localhost:3000/user/login', user).subscribe(a => {
-        console.log(a);
-        
+      this.http.post<IGenericResponse<IUser>>('http://localhost:3000/user/login', user).subscribe(resp => {
+        if(resp.status === HttpStatusCode.Ok) {
+          if(resp.data.role === UserRole.MART ) {
+            this.router.navigate(['/admin/consumer/dashbaord'])
+          } else if(resp.data.role === UserRole.COMPANY ) {
+            this.router.navigate(['/admin/consumer/dashboard'])
+          }
+        }
       })
       // this.authService.login(email, password).subscribe({
       //   next: (userData) => {

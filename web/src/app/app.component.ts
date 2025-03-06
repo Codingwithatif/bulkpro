@@ -20,10 +20,7 @@ export class AppComponent implements OnInit {
   }
   
   ngOnInit(): void {
-    this.http.get('http://localhost:3000/auth/getUSer').subscribe(user => {
-      console.log(JSON.parse(user as any));
-      
-    })
+  
   }
   title = 'web';
 }

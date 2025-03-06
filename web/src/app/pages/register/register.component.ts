@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { AuthService } from '../../shared/auth.service';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { IUser, UserRole } from '../../models/auth.model';
 
 @Component({
   selector: 'app-register',
@@ -19,15 +20,16 @@ export class RegisterComponent {
 
   authService = inject(AuthService);
   loading: boolean = false; 
+  userRole = UserRole;
 
   constructor(private fb: FormBuilder) {
     this.registerForm = this.fb.group({
-      role: ['Mart', Validators.required],
-      martName: ['Mart', Validators.required], // martName will be the username
+      role: ['', Validators.required],
+      name: ['Mart', Validators.required], // martName will be the username
       email: ['Mart@aaa.com', [Validators.required, Validators.email]],
       phone: ['1122345668897', [Validators.required, Validators.pattern('^[0-9]{10,15}$')]], // Updated pattern for phone numbers
       address: ['Mart', Validators.required],
-      password: ['MartMart', [Validators.required, Validators.minLength(6)]],
+      password: ['password', [Validators.required, Validators.minLength(6)]],
     });
   }
 
@@ -36,18 +38,17 @@ export class RegisterComponent {
    */
   registerMart() {
     const formValue = this.registerForm.value;
-    const user = {
-      name: formValue.martName,
+    const user: IUser = {
+      name: formValue.name,
       password: formValue.password,
       email: formValue.email,
-      // phone: formValue.phone,
-      // address: formValue.address,
+      address: formValue.address,
+      phoneNumber: formValue.phoneNumber,
+      role: formValue.role,
     }
-
     this.authService.register(user).subscribe(a => {
       console.log(a)
     })
-      
 }
 
   /**

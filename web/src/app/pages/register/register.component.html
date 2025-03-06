@@ -19,8 +19,8 @@
               <label for="role" class="form-label">Register as:</label>
               <select class="form-select" id="role" formControlName="role" required>
                 <option value="" disabled> -- Select Role --</option>
-                <option value="Mart">Mart</option>
-                <option value="Company">Company</option>
+                <option [value]="userRole.COMPANY">{{userRole.COMPANY}}</option>
+                <option [value]="userRole.MART">{{userRole.MART}}</option>
               </select>
               
               <div *ngIf="registerForm.get('role')?.invalid && registerForm.get('role')?.touched" class="invalid-feedback">

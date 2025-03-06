@@ -57,16 +57,12 @@
                 <button
                   type="submit"
                   class="btn btn-primary btn-block btn-lg mt-3 w-100"
-                  [disabled]="loginForm.invalid || loading"
+                  [disabled]="loginForm.invalid"
                 >
                   Login
                 </button>
                 <!-- Loader -->
-                <div *ngIf="loading" class="text-center mt-3 loader-container">
-                  <div class="dot"></div>
-                  <div class="dot"></div>
-                  <div class="dot"></div>
-                </div>
+           
               </form>
               <div class="text-center mt-4">
                 <div class="small">

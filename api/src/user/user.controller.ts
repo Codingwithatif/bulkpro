@@ -1,13 +1,14 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { IUser as IUserRegister } from './dto/user.model';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post('create')
-  create(@Body() createUserDto: any) {
+  create(@Body() createUserDto: IUserRegister) {
     return this.userService.create(createUserDto);
   }
 
@@ -25,7 +26,7 @@ export class UserController {
 
   @Get(':id')
   findOne(@Param('id', ParseUUIDPipe) id: string) {
-    return this.userService.findOne(id);
+    return this.userService.findUserByEmail(id);
   }
 
   @Patch(':id')

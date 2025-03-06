@@ -45,36 +45,6 @@ export const routes: Routes = [
       // Add other child routes for the company dashboard as needed
     ],
   },
-  // {
-  //   path: 'sales-dashboard',
-  //   loadComponent: () =>
-  //     import('../app/pages/dashboard/dashboard.component').then(
-  //       (mod) => mod.DashboardComponent
-  //     ),
-  //   children: [
-  //     {
-  //       path: 'sell-product',
-  //       loadComponent: () =>
-  //         import('./sales-dashboard/sell-product/sell-product.component').then(
-  //           (mod) => mod.SellProductComponent
-  //         ),
-  //     },
-  //     {
-  //       path: 'view-sales',
-  //       loadComponent: () =>
-  //         import('./sales-dashboard/view-sales/view-sales.component').then(
-  //           (mod) => mod.ViewSalesComponent
-  //         ),
-  //     },
-  //     {
-  //       path: 'daily-reports',
-  //       loadComponent: () =>
-  //         import('./sales-dashboard/daily-reports/daily-reports.component').then(
-  //           (mod) => mod.DailyReportsComponent
-  //         ),
-  //     },
-  //   ],
-  // },
   {
     path: '',
     children: ADMIN_ROUTES,
