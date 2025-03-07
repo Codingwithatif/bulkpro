@@ -63,8 +63,10 @@ export class InventoryManagementComponent {
     );
   }
 
-  getCategoryName(categoryId: string): string {
-    const category = this.categories.find((cat) => cat.id === categoryId);
+  getCategoryName(categoryId: string | number | undefined): string {
+    if (!categoryId) return 'Unknown';
+  
+    const category = this.categories.find((cat) => String(cat.id) === String(categoryId));
     return category ? category.name : 'Unknown';
   }
 

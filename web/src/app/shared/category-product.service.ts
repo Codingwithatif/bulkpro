@@ -1,101 +1,179 @@
+// import { Injectable } from '@angular/core';
+// import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+// import { Observable, throwError, lastValueFrom } from 'rxjs';
+// import { catchError } from 'rxjs/operators';
+// import { Category } from '../models/category.model';
+// import { Product } from '../models/product.model';
+
+// @Injectable({
+//   providedIn: 'root',
+// })
+// export class CategoryProductService {
+//   private apiUrl = 'http://localhost:3000'; // Ensure this matches your backend API base URL
+
+//   constructor(private http: HttpClient) {}
+
+//   // ✅ Add Category
+//   async addCategory(martId: number, categoryData: Category): Promise<void> {
+//     try {
+//       await lastValueFrom(
+//         this.http.post<void>(`${this.apiUrl}/marts/${martId}/categories`, categoryData).pipe(
+//           catchError(this.handleError)
+//         )
+//       );
+//       console.log('Category added successfully.');
+//     } catch (error) {
+//       this.logError('adding category', error);
+//     }
+//   }
+
+//   // ✅ Update Category
+//   async updateCategory(martId: number, categoryId: number, categoryData: Category): Promise<void> {
+//     try {
+//       await lastValueFrom(
+//         this.http.put<void>(`${this.apiUrl}/marts/${martId}/categories/${categoryId}`, categoryData).pipe(
+//           catchError(this.handleError)
+//         )
+//       );
+//       console.log('Category updated successfully.');
+//     } catch (error) {
+//       this.logError('updating category', error);
+//     }
+//   }
+
+//   // ✅ Delete Category
+//   async deleteCategory(martId: number, categoryId: number): Promise<void> {
+//     try {
+//       await lastValueFrom(
+//         this.http.delete<void>(`${this.apiUrl}/marts/${martId}/categories/${categoryId}`).pipe(
+//           catchError(this.handleError)
+//         )
+//       );
+//       console.log('Category deleted successfully.');
+//     } catch (error) {
+//       this.logError('deleting category', error);
+//     }
+//   }
+
+//   // ✅ Get All Categories for a Mart
+//   getCategories(martId: number): Observable<Category[]> {
+//     return this.http.get<Category[]>(`${this.apiUrl}/marts/${martId}/categories`).pipe(
+//       catchError(this.handleError)
+//     );
+//   }
+
+//   // ✅ Add Product to a Specific Category
+//   async addProductToCategory(martId: number, categoryId: number, product: Product): Promise<void> {
+//     try {
+//       await lastValueFrom(
+//         this.http.post<void>(`${this.apiUrl}/marts/${martId}/categories/${categoryId}/products`, product).pipe(
+//           catchError(this.handleError)
+//         )
+//       );
+//       console.log('Product added to category successfully.');
+//     } catch (error) {
+//       this.logError('adding product to category', error);
+//     }
+//   }
+
+//   // 🔹 Global Error Handler
+//   private handleError(error: HttpErrorResponse): Observable<never> {
+//     console.error('API Error:', error);
+//     return throwError(() => new Error(error.message || 'Something went wrong!'));
+//   }
+
+//   // 🔹 Log Errors for Debugging
+//   private logError(action: string, error: any): void {
+//     console.error(`Error ${action}:`, error?.message || error);
+//   }
+// }
 
 import { Injectable } from '@angular/core';
-import { Firestore, collection, collectionData, doc, setDoc, updateDoc, deleteDoc, addDoc, getDoc } from '@angular/fire/firestore';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, throwError, lastValueFrom } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { Category } from '../models/category.model';
 import { Product } from '../models/product.model';
-import { SaleData } from '../models/sales.model';
-import { Observable } from 'rxjs';
-import { arrayUnion } from 'firebase/firestore';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CategoryProductService {
-  constructor(private firestore: Firestore) {}
+  private apiUrl = 'http://localhost:3000/categories'; // Updated to match backend
 
-  async addCategory(martId: string, category: Category): Promise<void> {
-    const categoriesCollection = collection(this.firestore, `marts/${martId}/categories`);
-    const categoryId = doc(categoriesCollection).id;
-    await setDoc(doc(categoriesCollection, categoryId), { ...category, id: categoryId, martId });
-  }
+  constructor(private http: HttpClient) {}
 
-  async updateCategory(martId: string, categoryId: string, categoryData: Partial<Category>): Promise<void> {
-    const categoryDoc = doc(this.firestore, `marts/${martId}/categories/${categoryId}`);
-    await updateDoc(categoryDoc, categoryData as { [key: string]: any });
-  }
-
-  async deleteCategory(martId: string, categoryId: string): Promise<void> {
-    const categoryDoc = doc(this.firestore, `marts/${martId}/categories/${categoryId}`);
-    await deleteDoc(categoryDoc);
-  }
-
-  getCategories(martId: string): Observable<Category[]> {
-    const categoriesCollection = collection(this.firestore, `marts/${martId}/categories`);
-    return collectionData(categoriesCollection, { idField: 'id' }) as Observable<Category[]>;
-  }
-
-  async addProductToCategory(martId: string, categoryId: string, productData: Product): Promise<void> {
-    const productsCollection = collection(this.firestore, `marts/${martId}/categories/${categoryId}/products`);
-    const productId = doc(productsCollection).id;
-    await setDoc(doc(productsCollection, productId), { ...productData, id: productId, categoryId, martId });
-
-    const categoryDoc = doc(this.firestore, `marts/${martId}/categories/${categoryId}`);
-    await updateDoc(categoryDoc, {
-      products: arrayUnion(productId)
-    });
-  }
-
-  async recordSale(martId: string, categoryId: string, productId: string, productName: string, price: number, quantity: number): Promise<void> {
-    const salesCollection = collection(this.firestore, `marts/${martId}/sales`);
-    const productRef = doc(this.firestore, `marts/${martId}/categories/${categoryId}/products/${productId}`);
-
-    const productSnapshot = await getDoc(productRef);
-    if (!productSnapshot.exists()) {
-      throw new Error('🚨 Product not found.');
-    }
-
-    const productData = productSnapshot.data();
-    const currentQuantity = productData['quantity'] || 0;
-    const thresholdLimit = productData['threshold'] || 0;
-
-    if (quantity > currentQuantity) {
-      throw new Error('🚨 Insufficient stock for sale.');
-    }
-
-    const updatedQuantity = currentQuantity - quantity;
-    await updateDoc(productRef, { quantity: updatedQuantity });
-
-    const saleData: SaleData = {
-      productId,
-      productName,
-      quantity,
-      totalPrice: price * quantity,
-      date: this.getTodayDate(),
-      month: this.getCurrentMonth()
-    };
-    await addDoc(salesCollection, saleData);
-
-    if (updatedQuantity <= thresholdLimit) {
-      await this.notifyLowStock(martId, productId, productName, updatedQuantity);
+  // ✅ Add Category
+  async addCategory(martId: number, categoryData: Category): Promise<void> {
+    try {
+      await lastValueFrom(
+        this.http.post<void>(`${this.apiUrl}/createCategory`, categoryData).pipe(
+          catchError(this.handleError)
+        )
+      );
+      console.log('Category added successfully.');
+    } catch (error) {
+      this.logError('adding category', error);
     }
   }
 
-  private async notifyLowStock(martId: string, productId: string, productName: string, remainingStock: number): Promise<void> {
-    const notificationsCollection = collection(this.firestore, `marts/${martId}/notifications`);
-    await addDoc(notificationsCollection, {
-      message: `⚠️ Low stock alert: ${productName} has only ${remainingStock} left!`,
-      productId,
-      date: new Date().toISOString(),
-      status: 'unread'
-    });
+  // ✅ Update Category
+  async updateCategory(categoryId: number, editingCategoryId: number, categoryData: Category): Promise<void> {
+    try {
+      await lastValueFrom(
+        this.http.put<void>(`${this.apiUrl}/${categoryId}`, categoryData).pipe(
+          catchError(this.handleError)
+        )
+      );
+      console.log('Category updated successfully.');
+    } catch (error) {
+      this.logError('updating category', error);
+    }
   }
 
-  private getTodayDate(): string {
-    return new Date().toISOString().split('T')[0];
+  // ✅ Delete Category
+  async deleteCategory( categoryId: number): Promise<void> {
+    try {
+      await lastValueFrom(
+        this.http.delete<void>(`${this.apiUrl}/${categoryId}`).pipe(
+          catchError(this.handleError)
+        )
+      );
+      console.log('Category deleted successfully.');
+    } catch (error) {
+      this.logError('deleting category', error);
+    }
   }
 
-  private getCurrentMonth(): string {
-    const today = new Date();
-    return `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}`;
+  // ✅ Get All Categories
+  getCategories(martId: number): Observable<Category[]> {
+    return this.http.get<Category[]>(`${this.apiUrl}`).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  // ✅ Add Product to a Specific Category
+  async addProductToCategory(categoryId: number, product: Product): Promise<void> {
+    try {
+      await lastValueFrom(
+        this.http.post<void>(`${this.apiUrl}/${categoryId}/products`, product).pipe(
+          catchError(this.handleError)
+        )
+      );
+      console.log('Product added to category successfully.');
+    } catch (error) {
+      this.logError('adding product to category', error);
+    }
+  }
+
+  // 🔹 Global Error Handler
+  private handleError(error: HttpErrorResponse): Observable<never> {
+    console.error('API Error:', error);
+    return throwError(() => new Error(error.message || 'Something went wrong!'));
+  }
+
+  // 🔹 Log Errors for Debugging
+  private logError(action: string, error: any): void {
+    console.error(`Error ${action}:`, error?.message || error);
   }
 }

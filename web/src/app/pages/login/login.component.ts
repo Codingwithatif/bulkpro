@@ -11,13 +11,13 @@ import { IGenericResponse, IUser, UserRole } from '../../models/auth.model';
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'] // Fixed typo here, should be styleUrls
+  styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
   loginForm: FormGroup;
   authService = inject(AuthService);
   router = inject(Router);
-  loading: boolean = false; // Loader state
+  loading: boolean = false;
 
   constructor(private fb: FormBuilder, private http: HttpClient) {
     this.loginForm = this.fb.group({
@@ -28,7 +28,7 @@ export class LoginComponent {
 
   onSubmit(): void {
     if (this.loginForm.valid) {
-      this.loading = true; // Show loader
+      this.loading = true;
       const { email, password } = this.loginForm.value;
       const user = {
         email: email,
@@ -37,31 +37,14 @@ export class LoginComponent {
       this.http.post<IGenericResponse<IUser>>('http://localhost:3000/user/login', user).subscribe(resp => {
         if(resp.status === HttpStatusCode.Ok) {
           if(resp.data.role === UserRole.MART ) {
+            console.log('Mart ID:', resp.data.id);
             this.router.navigate(['/admin/consumer'])
           } else if(resp.data.role === UserRole.COMPANY ) {
+            console.log('Company ID:', resp.data.id);
             this.router.navigate(['/admin/supplier'])
           }
         }
       })
-      // this.authService.login(email, password).subscribe({
-      //   next: (userData) => {
-      //     console.log('Login successful, user role:', userData.role);
-      //     //a statemnet for this 
-      //     if (userData.role === 'Mart') {
-      //       this.router.navigate(['/admin/consumer/dashboard']);
-      //     } else if (userData.role === 'Company') {
-      //       this.router.navigate(['/admin/supplier/dashboard']);
-      //     } else {
-      //       console.error('Unknown role:', userData.role);
-      //     }
-      //     this.loading = false; // Hide loader after successful login
-      //   },
-      //   error: (error) => {
-      //     console.error('Login error:', error);
-      //     alert('Login failed. Please check your credentials.');
-      //     this.loading = false; // Hide loader on error
-      //   }
-      // });
     } else {
       console.error('Form is invalid');
       alert('Please fill out the form correctly.');

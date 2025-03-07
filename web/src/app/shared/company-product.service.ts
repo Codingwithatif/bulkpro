@@ -9,6 +9,9 @@ import { query, where } from 'firebase/firestore';
   providedIn: 'root'
 })
 export class CompanyProductService {
+  updateCategory(categoryData: Category) {
+    throw new Error('Method not implemented.');
+  }
   constructor(private firestore: Firestore) {}
 
   // Add a new company category

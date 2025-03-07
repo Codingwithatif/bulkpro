@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ComponentsWithFormsModule } from '../../../../../components/components-with-forms.module';
 import { Category } from '../../../../../models/category.model';
 import { CategoryProductService } from '../../../../../shared/category-product.service';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-add-category',
@@ -17,8 +18,8 @@ export class AddCategoryComponent implements OnInit {
   filteredCategories: Category[] = [];
   searchTerm: string = '';
   showAddCategoryForm: boolean = false;
-  editingCategoryId: string | null = null; // Track editing mode
-  martId: string = 'your-mart-id'; // Replace with actual mart ID
+  editingCategoryId: number | null = null; // Now explicitly allows null
+  martId: number = 1; // Replace with actual mart ID from authentication
 
   constructor(private fb: FormBuilder, private categoryProductService: CategoryProductService) {}
 
@@ -31,32 +32,29 @@ export class AddCategoryComponent implements OnInit {
     this.loadCategories();
   }
 
-  onSubmit(): void {
-    if (this.categoryForm.valid) {
-      const categoryData: Category = {
-        name: this.categoryForm.value.name,
-        description: this.categoryForm.value.description,
-      };
-
-      if (this.editingCategoryId) {
-        // Update existing category
-        this.categoryProductService.updateCategory(this.martId, this.editingCategoryId, categoryData)
-          .then(() => {
-            console.log('Category updated successfully!');
-            this.resetForm();
-          })
-          .catch((error: any) => console.error('Error updating category:', error));
-      } else {
-        // Add new category
-        this.categoryProductService.addCategory(this.martId, categoryData)
-          .then(() => {
-            console.log('Category added successfully!');
-            this.resetForm();
-          })
-          .catch(error => console.error('Error adding category:', error));
-      }
-    } else {
+  async onSubmit(): Promise<void> {
+    if (this.categoryForm.invalid) {
       console.error('Form is invalid');
+      return;
+    }
+
+    const categoryData: Category = {
+      id: this.editingCategoryId ?? undefined, // Ensure id is optional
+      name: this.categoryForm.value.name,
+      description: this.categoryForm.value.description,
+    };
+
+    try {
+      if (this.editingCategoryId !== null) {
+        await this.categoryProductService.updateCategory(this.martId, this.editingCategoryId, categoryData);
+        console.log('Category updated successfully!');
+      } else {
+        await this.categoryProductService.addCategory(this.martId, categoryData);
+        console.log('Category added successfully!');
+      }
+      this.resetForm();
+    } catch (error) {
+      console.error('Error saving category:', error);
     }
   }
 
@@ -73,27 +71,34 @@ export class AddCategoryComponent implements OnInit {
     );
   }
 
-  deleteCategory(categoryId: string): void {
-    if (confirm('Are you sure you want to delete this category?')) {
-      this.categoryProductService.deleteCategory(this.martId, categoryId)
-        .then(() => {
-          console.log('Category deleted successfully!');
-          this.loadCategories();
-        })
-        .catch(error => console.error('Error deleting category:', error));
+  async deleteCategory(categoryId?: number): Promise<void> {
+    if (!categoryId || !confirm('Are you sure you want to delete this category?')) return;
+
+    try {
+      await this.categoryProductService.deleteCategory(this.martId, categoryId);
+      console.log('Category deleted successfully!');
+      this.loadCategories();
+    } catch (error) {
+      console.error('Error deleting category:', error);
     }
   }
 
-  loadCategories(): void {
-    this.categoryProductService.getCategories(this.martId).subscribe(categories => {
-      this.categories = categories;
-      this.filteredCategories = categories;
-    });
+  async loadCategories(): Promise<void> {
+    try {
+      const categories = await lastValueFrom(this.categoryProductService.getCategories(this.martId));
+      this.categories = categories ?? []; // Ensures categories is always an array
+      this.filteredCategories = this.categories;
+    } catch (error) {
+      console.error('Error loading categories:', error);
+      this.categories = []; // Fallback to an empty array on error
+      this.filteredCategories = [];
+    }
   }
+  
 
   openAddCategoryModal(): void {
     this.showAddCategoryForm = true;
-    this.editingCategoryId = null; // Reset edit mode
+    this.editingCategoryId = null;
   }
 
   cancelAddCategory(): void {
@@ -105,8 +110,8 @@ export class AddCategoryComponent implements OnInit {
       name: category.name,
       description: category.description,
     });
-  
-    this.editingCategoryId = category.id ?? null; // Ensure it's either string or null
+
+    this.editingCategoryId = category.id ?? null; // Ensures valid ID or null
     this.showAddCategoryForm = true;
   }
 }

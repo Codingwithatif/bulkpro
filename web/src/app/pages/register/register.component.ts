@@ -27,9 +27,11 @@ export class RegisterComponent {
       role: ['', Validators.required],
       name: ['Mart', Validators.required], // martName will be the username
       email: ['Mart@aaa.com', [Validators.required, Validators.email]],
-      phone: ['1122345668897', [Validators.required, Validators.pattern('^[0-9]{10,15}$')]], // Updated pattern for phone numbers
+      phoneNumber: ['1122345668897', [Validators.required, Validators.pattern('^[0-9]{10,15}$')]], // Updated pattern for phone numbers
       address: ['Mart', Validators.required],
       password: ['password', [Validators.required, Validators.minLength(6)]],
+      martId: [''], // Added martId
+      companyId: [''] // Added companyId
     });
   }
 
@@ -45,11 +47,13 @@ export class RegisterComponent {
       address: formValue.address,
       phoneNumber: formValue.phoneNumber,
       role: formValue.role,
+      martId: formValue.role === UserRole.MART ? formValue.martId : undefined,
+      companyId: formValue.role === UserRole.COMPANY ? formValue.companyId : undefined
     }
     this.authService.register(user).subscribe(a => {
       console.log(a)
     })
-}
+  }
 
   /**
    * Handles form submission
