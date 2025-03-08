@@ -1,27 +1,94 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { Injectable } from '@nestjs/common';
+
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { Product } from './entities/product.entity';
 
 @Injectable()
 export class ProductService {
-  create(createProductDto: CreateProductDto) {
-    return 'This action adds a new product';
+  constructor(
+    @InjectRepository(Product)
+    private readonly productRepository: Repository<Product>,
+  ) {}
+
+  // Create a new product
+  async create(createProductDto: CreateProductDto) {
+    console.log('Received Data:', createProductDto); // 🛠 Debug log
+
+    if (!createProductDto || !createProductDto.name) {
+      throw new BadRequestException('Product name is required');
+    }
+
+    const newProduct = this.productRepository.create(createProductDto);
+    await this.productRepository.save(newProduct);
+
+    return {
+      statusCode: 201,
+      message: 'Product created successfully',
+      data: newProduct,
+    };
   }
 
-  findAll() {
-    return `This action returns all product`;
+  // Get all products
+  async findAll() {
+    const products = await this.productRepository.find();
+    return {
+      statusCode: 200,
+      message: 'Products retrieved successfully',
+      data: products,
+    };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
+  // Get a single product by ID
+  async findOne(id: string) {
+    const product = await this.productRepository.findOne({ where: { id } });
+
+    if (!product) {
+      throw new NotFoundException(`Product with ID ${id} not found`);
+    }
+
+    return {
+      statusCode: 200,
+      message: 'Product retrieved successfully',
+      data: product,
+    };
   }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
+  // Update a product
+  async update(id: string, updateProductDto: UpdateProductDto) {
+    const product = await this.productRepository.preload({
+      id,
+      ...updateProductDto,
+    });
+
+    if (!product) {
+      throw new NotFoundException(`Product with ID ${id} not found`);
+    }
+
+    await this.productRepository.save(product);
+
+    return {
+      statusCode: 200,
+      message: 'Product updated successfully',
+      data: product,
+    };
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+  // Delete a product
+  async remove(id: string) {
+    const product = await this.productRepository.findOne({ where: { id } });
+
+    if (!product) {
+      throw new NotFoundException(`Product with ID ${id} not found`);
+    }
+
+    await this.productRepository.remove(product);
+
+    return {
+      statusCode: 200,
+      message: 'Product deleted successfully',
+    };
   }
 }

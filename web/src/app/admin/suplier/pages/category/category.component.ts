@@ -6,6 +6,7 @@ import { CategoryService } from '../../../../shared/category.service';
 
 import { ComponentsWithFormsModule } from '../../../../components/components-with-forms.module';
 import { Observable } from 'rxjs';
+import { Category } from '../../../../models/category.model';
 
 @Component({
   selector: 'app-category',
@@ -15,64 +16,28 @@ import { Observable } from 'rxjs';
   styleUrl: './category.component.scss'
 })
 export class CategoryComponent implements OnInit {
-  ngOnInit(): void {
-    throw new Error('Method not implemented.');
-  }
-  // categoryForm: FormGroup;
-  // categories: any[] = [];
-  // filteredCategories: any[] = [];
-  // searchTerm: string = '';
-  // showAddCategoryForm = false;
-  // editingCategory: any = null;
-  // http: any;
-
-  // constructor(private fb: FormBuilder, private categoryService: CategoryService) {
-  //   this.categoryForm = this.fb.group({
-  //     name: ['', Validators.required],
-  //     description: [''],
-  //   });
-  // }
-
-  // ngOnInit(): void {
-  //   this.loadCategories();
-  // }
-
-  // loadCategories() {
-  //   this.categoryService.getCategories().subscribe((data) => {
-  //     this.categories = data;
-  //     this.filteredCategories = data;
-  //   });
-  // }
-
-  // openAddCategoryModal() {
-  //   this.showAddCategoryForm = true;
-  //   this.categoryForm.reset();
-  //   this.editingCategory = null;
-  // }
-
-  // onSubmit() {
-  //   if (this.editingCategory) {
-  //     this.categoryService
-  //       .updateCategory(this.editingCategory.id, this.categoryForm.value)
-  //       .subscribe(() => this.loadCategories());
-  //   } else {
-  //     this.categoryService.addCategory(this.categoryForm.value).subscribe(() => {
-  //       this.loadCategories();
-  //       this.showAddCategoryForm = false;
-  //     });
-  //   }
-  // }
-  // addCategory(category: any): Observable<any> {
-  //   return this.http.post('http://localhost:3000/category/create', category);
-  // }
-  
-  // cancelAddCategory() {
-  //   this.showAddCategoryForm = false;
-  // }
-
-  // filterCategories() {
-  //   this.filteredCategories = this.categories.filter((category) =>
-  //     category.name.toLowerCase().includes(this.searchTerm.toLowerCase())
-  //   );
-  // }
-}
+  category: Category = { name: '', description: '' };
+   message = '';
+ 
+   constructor(private categoryService: CategoryService) {}
+   ngOnInit(): void {
+     throw new Error('Method not implemented.');
+   }
+ 
+   addCategory() {
+     if (!this.category.name) {
+       this.message = 'Category name is required!';
+       return;
+     }
+ 
+     this.categoryService.createCategory(this.category).subscribe({
+       next: (response) => {
+         this.message = response.message;
+         this.category = { name: '', description: '' }; // Reset form
+       },
+       error: (err) => {
+         this.message = 'Error: ' + err.error.message;
+       },
+     });
+   }
+ }

@@ -13,38 +13,38 @@
                 class="list-group-item d-flex justify-content-between align-items-center flex-wrap" 
                 *ngFor="let product of lowStockProducts"
               >
-                <div class="w-50">
+                <!-- <div class="w-50">
                   <strong>{{ product.productName }}</strong> - Only 
                   <span class="text-danger font-weight-bold">{{ product.quantity }}</span> left!
-                </div>
+                </div> -->
 
                 <!-- ✅ Input for Restock Quantity -->
-                <input 
+                <!-- <input 
                   type="number" 
                   [(ngModel)]="restockQuantities[product.id]"
                   class="form-control w-25 mx-2"
                   min="1"
-                  [placeholder]="'Qty'"
+                  [placeholder]="'Qty'" -->
                 />
 
                 <!-- ✅ Company Selection Dropdown -->
-                <select 
+                <!-- <select 
                   [(ngModel)]="selectedCompanies[product.id]"
                   class="form-control w-25 mx-2"
-                >
+                > -->
                   <option value="" disabled selected>Select Company</option>
                   <option *ngFor="let company of companies" [value]="company.id">
                     {{ company.name }}
                   </option>
-                </select>
+                <!-- </select> -->
 
                 <!-- ✅ Button to Send Restock Request -->
-                <button 
+                <!-- <button 
                   class="btn btn-primary btn-sm" 
                   (click)="sendRestockRequest(product)"
                 >
                   Request Restock
-                </button>
+                </button> -->
               </li>
             </ul>
           </div>

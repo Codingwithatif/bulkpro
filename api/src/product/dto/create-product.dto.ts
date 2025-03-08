@@ -1,17 +1,20 @@
 
-import { IsString, IsNotEmpty, IsNumber, IsUUID } from 'class-validator';
+import { IsString, IsNumber, IsUUID, IsOptional } from 'class-validator';
 
 export class CreateProductDto {
   @IsString()
-  @IsNotEmpty()
   name: string;
+
+  @IsString()
+  description: string;
 
   @IsNumber()
   price: number;
 
   @IsNumber()
-  stock: number;
+  stock: number;  // Ensure this matches DTO
 
   @IsUUID()
-  categoryId: string;
+  @IsOptional()
+  categoryId?: string; 
 }

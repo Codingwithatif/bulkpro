@@ -1,134 +1,123 @@
-import { Injectable } from '@angular/core';
-import { Firestore, collection, collectionData, doc, deleteDoc, updateDoc, getDoc, addDoc } from '@angular/fire/firestore';
-import { Observable, from } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { Product } from '../models/product.model';
-import { Category } from '../models/category.model';
-import { RestockRequest } from '../models/restock-request.model';
+// import { Injectable } from '@angular/core';
+// import { Product } from '../models/product.model';
+// import { Category } from '../models/category.model';
+// import { RestockRequest } from '../models/restock-request.model';
 
-@Injectable({
-  providedIn: 'root',
-})
-export class InventoryService {
-  constructor(private firestore: Firestore) {}
+// @Injectable({
+//   providedIn: 'root',
+// })
+// export class InventoryService {
+//   private products: Product[] = [];
+//   private categories: Category[] = [];
+//   private restockRequests: RestockRequest[] = [];
+//   private companies: { id: string; name: string; role: string }[] = [];
 
-  // ✅ Fetch all inventory products
-  getInventory(): Observable<Product[]> {
-    const productsCollection = collection(this.firestore, 'products');
-    return collectionData(productsCollection, { idField: 'id' }) as Observable<Product[]>;
-  }
+//   constructor() {}
 
-  // ✅ Fetch all categories
-  getCategories(): Observable<Category[]> {
-    const categoriesCollection = collection(this.firestore, 'categories');
-    return collectionData(categoriesCollection, { idField: 'id' }) as Observable<Category[]>;
-  }
+//   // ✅ Fetch all inventory products
+//   getInventory(): Product[] {
+//     return this.products;
+//   }
 
- // ✅ Fetch all companies from users collection where role is 'company'
-getCompanies(): Observable<{
-  role: string; id: string; name: string 
-}[]> {
-  const usersCollection = collection(this.firestore, 'users');
-  
-  return collectionData(usersCollection, { idField: 'id' }).pipe(
-    map((users: any[]) =>
-      users
-        .filter(user => user.role === 'company') // 🔥 Filter only companies
-        .map(user => ({ id: user.id, name: user.name })) // Return only id & name
-    )
-  );
-}
+//   // ✅ Fetch all categories
+//   getCategories(): Category[] {
+//     return this.categories;
+//   }
 
-  // ✅ Get a product by its ID
-  getProductById(productId: string): Observable<Product> {
-    const productDocRef = doc(this.firestore, `products/${productId}`);
-    return from(getDoc(productDocRef)).pipe(
-      map((docSnap) => {
-        if (docSnap.exists()) {
-          const data = docSnap.data() as Product;
-          return { ...data, id: docSnap.id }; // Ensuring no duplicate 'id' field
-        } else {
-          throw new Error(`❌ Product with ID ${productId} not found.`);
-        }
-      })
-    );
-  }
+//   // ✅ Fetch all companies
+//   getCompanies(): { id: string; name: string }[] {
+//     return this.companies.filter((company) => company.role === 'company');
+//   }
 
-  // ✅ Delete a product
-  async deleteProduct(id: string): Promise<void> {
-    try {
-      const productDocRef = doc(this.firestore, `products/${id}`);
-      await deleteDoc(productDocRef);
-      console.log(`✅ Product with ID ${id} deleted successfully.`);
-    } catch (error) {
-      console.error(`❌ Error deleting product (ID: ${id}):`, error);
-    }
-  }
+//   // ✅ Get a product by its ID
+//   getProductById(productId: string): Product | undefined {
+//     return this.products.find((product) => product.id === productId);
+//   }
 
-  // ✅ Update product details
-  async updateProduct(product: Product): Promise<void> {
-    try {
-      const { id, ...productData } = product;
-      const productDocRef = doc(this.firestore, `products/${id}`);
-      await updateDoc(productDocRef, productData);
-      console.log(`✅ Product ${id} updated successfully.`);
-    } catch (error) {
-      console.error(`❌ Error updating product (ID: ${product.id}):`, error);
-    }
-  }
+//   // ✅ Delete a product
+//   deleteProduct(id: string): void {
+//     const productIndex = this.products.findIndex((product) => product.id === id);
+//     if (productIndex !== -1) {
+//       this.products.splice(productIndex, 1);
+//       console.log(`✅ Product with ID ${id} deleted successfully.`);
+//     } else {
+//       console.error(`❌ Product with ID ${id} not found.`);
+//     }
+//   }
 
-  // ✅ Fetch Low Stock Products
-  getLowStockProducts(): Observable<Product[]> {
-    const productsCollection = collection(this.firestore, 'products');
-    return collectionData(productsCollection, { idField: 'id' }).pipe(
-      map((products: Product[]) => products.filter(p => p.quantity <= p.thresholdLimit))
-    );
-  }
+//   // ✅ Update product details
+//   updateProduct(product: Product): void {
+//     const existingProduct = this.getProductById(product.id);
+//     if (existingProduct) {
+//       Object.assign(existingProduct, product);
+//       console.log(`✅ Product ${product.id} updated successfully.`);
+//     } else {
+//       console.error(`❌ Error updating product (ID: ${product.id}): Product not found.`);
+//     }
+//   }
 
-  // ✅ Fetch All Restock Requests
-  getRestockRequests(): Observable<RestockRequest[]> {
-    const restockRequestsCollection = collection(this.firestore, 'restockRequests');
-    return collectionData(restockRequestsCollection, { idField: 'id' }) as Observable<RestockRequest[]>;
-  }
+//   // ✅ Fetch Low Stock Products
+//   getLowStockProducts(): Product[] {
+//     return this.products.filter((p) => p.quantity <= p.thresholdLimit);
+//   }
 
-  // ✅ Send Restock Request (with proper validation)
-  async sendRestockRequest(product: Product, martId: string, companyId: string, quantityRequested: number): Promise<void> {
-    try {
-      if (!companyId) {
-        console.error(`❌ Error: No company assigned for ${product.productName}.`);
-        return;
-      }
+//   // ✅ Fetch All Restock Requests
+//   getRestockRequests(): RestockRequest[] {
+//     return this.restockRequests;
+//   }
 
-      if (quantityRequested <= 0) {
-        console.warn(`⚠️ Invalid quantity (${quantityRequested}) for ${product.productName}. Request not sent.`);
-        return;
-      }
+//   // ✅ Send Restock Request
+//   sendRestockRequest(product: Product, martId: string, companyId: string, quantityRequested: number): void {
+//     if (!companyId) {
+//       console.error(`❌ Error: No company assigned for ${product.productName}.`);
+//       return;
+//     }
 
-      const restockRequestCollection = collection(this.firestore, 'restockRequests');
-      await addDoc(restockRequestCollection, {
-        productId: product.id,
-        productName: product.productName,
-        quantityRequested,
-        status: 'Pending',
-        timestamp: Date.now(),
-        martId,
-        companyId
-      });
+//     if (quantityRequested <= 0) {
+//       console.warn(`⚠️ Invalid quantity (${quantityRequested}) for ${product.productName}. Request not sent.`);
+//       return;
+//     }
 
-      console.log(`✅ Restock request sent for ${product.productName} (Qty: ${quantityRequested}) to company ${companyId}`);
-    } catch (error) {
-      console.error('❌ Error sending restock request:', error);
-    }
-  }
+//     const newRequest: RestockRequest = {
+//       productId: product.id,
+//       productName: product.productName,
+//       quantityRequested,
+//       status: 'Pending',
+//       timestamp: Date.now(),
+//       martId,
+//       companyId,
+//     };
 
-  // ✅ Update Restock Request Status
-  async updateRestockStatus(requestId: string, status: 'Pending' | 'Approved' | 'Delivered'): Promise<void> {
-    try {
-      const requestDocRef = doc(this.firestore, `restockRequests/${requestId}`);
-      await updateDoc(requestDocRef, { status });
-      console.log(`✅ Restock request ${requestId} updated to ${status}`);
-    } catch (error) {
-      console.error('❌ Error updating restock status:', error);
-    }
-  }
-}
+//     this.restockRequests.push(newRequest);
+//     console.log(`✅ Restock request sent for ${product.productName} (Qty: ${quantityRequested}) to company ${companyId}`);
+//   }
+
+//   // ✅ Update Restock Request Status
+//   updateRestockStatus(requestId: string, status: 'Pending' | 'Approved' | 'Delivered'): void {
+//     const request = this.restockRequests.find((req) => req.productId === requestId);
+//     if (request) {
+//       request.status = status;
+//       console.log(`✅ Restock request ${requestId} updated to ${status}`);
+//     } else {
+//       console.error(`❌ Restock request ${requestId} not found.`);
+//     }
+//   }
+
+//   // ✅ Add a new product
+//   createProduct(product: Product): void {
+//     this.products.push(product);
+//     console.log(`✅ Product ${product.productName} added successfully.`);
+//   }
+
+//   // ✅ Add a new category
+//   createCategory(category: Category): void {
+//     this.categories.push(category);
+//     console.log(`✅ Category ${category.name} added successfully.`);
+//   }
+
+//   // ✅ Add a new company
+//   createCompany(company: { id: string; name: string; role: string }): void {
+//     this.companies.push(company);
+//     console.log(`✅ Company ${company.name} added successfully.`);
+//   }
+// }

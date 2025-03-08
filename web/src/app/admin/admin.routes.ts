@@ -31,20 +31,8 @@ export const ADMIN_ROUTES: Routes = [
             (mod) => mod.AddProductComponent
           ),
       },
-      {
-        path: 'inventory-management',
-        loadComponent: () =>
-          import('./consumer/pages/inventory-management/inventory-management.component').then(
-            (mod) => mod.InventoryManagementComponent
-          ),
-      },
-      {
-        path: 'sales-tracking',
-        loadComponent: () =>
-          import('./consumer/pages/sales-tracking/sales-tracking.component').then(
-            (mod) => mod.SalesTrackingComponent
-          ),
-      },
+    
+    
     ],
   },
   {

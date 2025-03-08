@@ -5,6 +5,7 @@ import { CompanyProductService } from '../../../../shared/company-product.servic
 import { Category } from '../../../../models/category.model'; // Import the category model
 import { Product } from '../../../../models/product.model'; // Import the product model
 import { ComponentsWithFormsModule } from '../../../../components/components-with-forms.module';
+import { ProductService } from '../../../../shared/product.service';
 
 @Component({
   selector: 'app-product',
@@ -14,48 +15,31 @@ import { ComponentsWithFormsModule } from '../../../../components/components-wit
   styleUrls: ['./product.component.scss']
 })
 export class ProductComponent {
-  productForm!: FormGroup;
-  categories$!: Observable<Category[]>; // Observable for categories
-
-  constructor(
-    private fb: FormBuilder,
-    private companyProductService: CompanyProductService
-  ) {}
-
-  ngOnInit(): void {
-    this.initProductForm();
-    this.categories$ = this.companyProductService.getCategories(); // Get categories using the service
-  }
-
-  // Initialize the product form
-  initProductForm() {
-    this.productForm = this.fb.group({
-      productName: ['', Validators.required],
-      price: ['', [Validators.required, Validators.min(1)]],
-      quantity: ['', [Validators.required, Validators.min(1)]],
-      categoryId: ['', Validators.required]
-    });
-  }
-
-  // Method to handle product addition
-  onAddProduct() {
-    if (this.productForm.valid) {
-      const product: Product = this.productForm.value;
-
-      // Add product to category using the CompanyProductService
-      this.companyProductService.addProductToCategory(product.categoryId, product)
-        .then(() => {
-          console.log('Product added successfully!');
-          this.productForm.reset(); // Reset form after adding product
-        })
-        .catch((error: any) => console.error('Error adding product: ', error));
-    } else {
-      console.error('Product Form is invalid');
-    }
-  }
-
-  // Handle form submission
-  onSubmit() {
-    this.onAddProduct(); // Call the method to add the product
-  }
-}
+  product: Product = { name: '', description: '', price: 0, category: '', quantity: 0 }; // Define initial product object
+   message = '';
+   categories: string[] = []; // Array to hold categories for product
+ 
+   constructor(private productService: ProductService) {}
+ 
+   ngOnInit(): void {
+     // You can call a method here to load categories or other data if needed
+   }
+ 
+   addProduct() {
+     if (!this.product.name || !this.product.price || !this.product.category) {
+       this.message = 'All fields are required!';
+       return;
+     }
+ 
+     this.productService.createProduct(this.product).subscribe({
+       next: (response: { message: string; }) => {
+         this.message = response.message;
+         this.product = { name: '', description: '', price: 0, category: '', quantity: 0 }; // Reset form
+       },
+       error: (err: { error: { message: string; }; }) => {
+         this.message = 'Error: ' + err.error.message;
+       },
+     });
+   }
+ }
+ 
