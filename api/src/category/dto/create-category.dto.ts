@@ -1,19 +1,11 @@
-import { IsNotEmpty, IsOptional, IsNumber, IsString } from 'class-validator';
+import { IsString, IsOptional, IsNotEmpty } from 'class-validator';
 
 export class CreateCategoryDto {
-  @IsNotEmpty()
   @IsString()
+  @IsNotEmpty({ message: 'Name should not be empty' }) // Custom error message
   name: string;
 
   @IsOptional()
   @IsString()
   description?: string;
-
-  @IsOptional()
-  @IsNumber()
-  martId?: number;
-
-  @IsOptional()
-  @IsNumber()
-  companyId?: number;
 }

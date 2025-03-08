@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import JsBarcode from 'jsbarcode';
 import { Category } from '../../../../../models/category.model';
 import { Product } from '../../../../../models/product.model';
-import { CategoryProductService } from '../../../../../shared/category-product.service';
+
 import { ComponentsWithFormsModule } from '../../../../../components/components-with-forms.module';
 
 @Component({

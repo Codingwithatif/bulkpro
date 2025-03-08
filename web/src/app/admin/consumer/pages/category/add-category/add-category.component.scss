@@ -1,72 +1,50 @@
-.container {
-    background-color: #f8f9fa; /* Light background for contrast */
-    padding: 30px; /* Increased padding for a more spacious layout */
-    border-radius: 10px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
-  }
-  
-  .card {
-    border: none; /* Remove default border */
-    border-radius: 10px; /* Add border radius to card */
-    overflow: hidden; /* Ensure no overflow */
-  }
-  
-  .card-header {
-    background-color: #343a40; /* Dark header for contrast */
-    color: white; /* White text for visibility */
-    border-radius: 10px 10px 0 0; /* Rounded corners for header */
-    padding: 15px; /* Added padding for header */
-    font-size: 1.25rem; /* Increased font size */
-  }
-  
-  .list-group-item {
-    display: flex; /* Flexbox for alignment */
-    justify-content: space-between; /* Space between elements */
-    align-items: center; /* Center vertically */
-    padding: 15px; /* Added padding */
-    border-radius: 5px; /* Rounded corners */
-    margin-bottom: 10px; /* Space between list items */
-    background-color: #ffffff; /* White background for list items */
-    transition: background-color 0.3s, box-shadow 0.3s; /* Smooth transitions */
-  }
-  
-  .list-group-item:hover {
-    background-color: #e9ecef; /* Light grey on hover */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Shadow on hover */
-  }
-  
-  .btn-light {
-    border-radius: 5px; /* Rounded corners for button */
-    padding: 10px 15px; /* Increased padding for buttons */
-    transition: background-color 0.3s; /* Smooth background change */
-  }
-  
-  .btn-light:hover {
-    background-color: #f0f0f0; /* Light background on hover */
-  }
-  
-  .btn-outline-danger {
-    border-radius: 5px; /* Rounded corners for delete button */
-    padding: 10px 15px; /* Increased padding for buttons */
-    transition: background-color 0.3s; /* Smooth background change */
-  }
-  
-  .btn-outline-danger:hover {
-    background-color: rgba(255, 0, 0, 0.1); /* Light red background on hover */
-  }
-  
-  .btn-outline-warning {
-    border-radius: 5px; /* Rounded corners for edit button */
-    padding: 10px 15px; /* Increased padding for buttons */
-    transition: background-color 0.3s; /* Smooth background change */
-  }
-  
-  .btn-outline-warning:hover {
-    background-color: rgba(255, 193, 7, 0.1); /* Light yellow background on hover */
-  }
-  
-  .text-muted {
-    font-size: 0.9rem; /* Smaller font for description */
-    color: #6c757d; /* Muted text color */
-  }
-  
+/* Container Styling */
+div {
+  max-width: 500px;
+  margin: 30px auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Form Inputs */
+input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+input:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 5px rgba(74, 144, 226, 0.5);
+}
+
+/* Button */
+button {
+  width: 100%;
+  padding: 10px;
+  background: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background 0.3s ease-in-out;
+}
+
+button:hover {
+  background: #357ab7;
+}
+
+/* Message */
+p {
+  margin-top: 10px;
+  font-size: 14px;
+  color: green;
+}

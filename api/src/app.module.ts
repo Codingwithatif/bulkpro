@@ -11,6 +11,7 @@ import { CompanyModule } from './company/company.module';
 import { Category } from './category/entities/category.entity';
 import { Mart } from './mart/entities/mart.entity';  
 
+
 @Module({
   imports: [
     TypeOrmModule.forRoot({

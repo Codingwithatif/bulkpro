@@ -1,89 +1,37 @@
-<div class="container">
-  <div class="row justify-content-center">
-    <div class="col-lg-8">
-      <div class="card shadow">
-        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
-          <h4 class="mb-0">Manage Categories</h4>
-          <button class="btn btn-light" (click)="openAddCategoryModal()">Add New Category</button>
-        </div>
-        <div class="card-body">
-          <!-- Search Bar -->
-          <div class="mb-4">
-            <input
-              type="text"
-              class="form-control"
-              placeholder="Search categories..."
-              [(ngModel)]="searchTerm"
-              (input)="filterCategories()"
-            />
-          </div>
+<div class="max-w-lg mx-auto bg-white shadow-md rounded-lg p-6 mt-10">
+  <h2 class="text-2xl font-bold mb-4 text-gray-700">Add Category</h2>
 
-          <!-- Add Category Form -->
-          <div *ngIf="showAddCategoryForm">
-            <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()">
-              <h5 class="mb-3">Add New Category</h5>
-              <div class="mb-3">
-                <label for="categoryName" class="form-label">Category Name</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="categoryName"
-                  formControlName="name"
-                  placeholder="Enter category name"
-                  required
-                />
-              </div>
-
-              <div class="mb-3">
-                <label for="categoryDescription" class="form-label">Category Description</label>
-                <textarea
-                  class="form-control"
-                  id="categoryDescription"
-                  formControlName="description"
-                  rows="3"
-                  placeholder="Enter category description"
-                ></textarea>
-              </div>
-
-              <div class="d-grid">
-                <button
-                  type="submit"
-                  class="btn btn-dark btn-block"
-                  [disabled]="!categoryForm.valid"
-                >
-                  Save Category
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-outline-secondary mt-2"
-                  (click)="cancelAddCategory()"
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
-          </div>
-
-          <hr />
-
-          <!-- List of Categories -->
-          <h5 class="mb-3">Categories:</h5>
-          <ul class="list-group">
-            <li *ngFor="let category of filteredCategories" class="list-group-item d-flex justify-content-between align-items-center">
-              <div class="d-flex justify-content-between align-items-center w-100">
-                <div>
-                  <strong>{{ category.name }}</strong>
-                  <p class="mb-0 text-muted">{{ category.description }}</p>
-                </div>
-                <div>
-                  <button class="btn btn-sm btn-outline-warning me-2" (click)="editCategory(category)">Edit</button>
-                  <button class="btn btn-sm btn-outline-danger" (click)="deleteCategory(category.id!)">Delete</button>
-                </div>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </div>
+  <form (submit)="addCategory()" class="space-y-4">
+    <div>
+      <label class="block text-gray-600 font-medium">Category Name:</label>
+      <input
+        type="text"
+        [(ngModel)]="category.name"
+        name="name"
+        required
+        class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
+        placeholder="Enter category name"
+      />
     </div>
-  </div>
+
+    <div>
+      <label class="block text-gray-600 font-medium">Description:</label>
+      <input
+        type="text"
+        [(ngModel)]="category.description"
+        name="description"
+        class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
+        placeholder="Enter description"
+      />
+    </div>
+
+    <button
+      type="submit"
+      class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300"
+    >
+      Add Category
+    </button>
+  </form>
+
+  <p *ngIf="message" class="mt-4 text-green-600 text-sm">{{ message }}</p>
 </div>
