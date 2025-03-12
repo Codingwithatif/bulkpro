@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Category } from './entities/category.entity';
+import { UUID } from 'crypto';
 
 @Injectable()
 export class CategoryService {
@@ -41,7 +42,7 @@ export class CategoryService {
   }
 
   // Get a single category by ID
-  async findOne(id: string) {
+  async findOne(id: UUID) {
     const category = await this.categoryRepository.findOne({ where: { id } });
 
     if (!category) {
@@ -56,7 +57,7 @@ export class CategoryService {
   }
 
   // Update a category
-  async update(id: string, updateCategoryDto: UpdateCategoryDto) {
+  async update(id: UUID, updateCategoryDto: UpdateCategoryDto) {
     const category = await this.categoryRepository.preload({
       id,
       ...updateCategoryDto,
@@ -76,7 +77,7 @@ export class CategoryService {
   }
 
   // Delete a category
-  async remove(id: string) {
+  async remove(id: UUID) {
     const category = await this.categoryRepository.findOne({ where: { id } });
 
     if (!category) {

@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Category } from 'src/category/entities/category.entity';
+import { Store } from 'src/store/entities/store.entity';
+import { Base } from 'src/universal/entities/base.entity';
+import { Entity, Column, ManyToOne, OneToOne } from 'typeorm';
 
 @Entity()
-export class Product {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
-
+export class Product extends Base {
   @Column()
   name: string;
 
@@ -18,7 +18,10 @@ export class Product {
   @Column('int')
   stock: number;
 
+  @ManyToOne(() => Store, (store) => store.storeOwner)
+  store: Store;
 
-  // @ManyToOne(() => User, (user) => user.product)
-  // user: IUser;
+  @OneToOne(() => Category, (category) => category.products )
+  categories: Category
 }
+

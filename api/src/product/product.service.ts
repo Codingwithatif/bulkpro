@@ -6,6 +6,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './entities/product.entity';
 import { UserService } from 'src/user/user.service';
+import { UUID } from 'crypto';
 
 @Injectable()
 export class ProductService {
@@ -49,7 +50,7 @@ export class ProductService {
   }
 
   // Get a single product by ID
-  async findOne(id: string) {
+  async findOne(id: UUID) {
     const product = await this.productRepository.findOne({ where: { id } });
 
     if (!product) {
@@ -64,7 +65,7 @@ export class ProductService {
   }
 
   // Update a product
-  async update(id: string, updateProductDto: UpdateProductDto) {
+  async update(id: UUID, updateProductDto: UpdateProductDto) {
     const product = await this.productRepository.preload({
       id,
       ...updateProductDto,
@@ -84,7 +85,7 @@ export class ProductService {
   }
 
   // Delete a product
-  async remove(id: string) {
+  async remove(id: UUID) {
     const product = await this.productRepository.findOne({ where: { id } });
 
     if (!product) {
