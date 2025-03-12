@@ -31,9 +31,6 @@ export class RegisterComponent {
       phone: ['', [Validators.required, Validators.pattern('^[0-9]{10,15}$')]],
       address: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      storeName: [''],
-      ownerName: [''],
-      storeAddress: [''],
       storeRegistration: ['']
     });
   }
@@ -69,7 +66,6 @@ export class RegisterComponent {
       address: formValue.address,
       phoneNumber: formValue.phone,
       role: formValue.role,
-      store: store
     };
 
     this.authService.register(user).subscribe(response => {

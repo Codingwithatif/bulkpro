@@ -1,6 +1,5 @@
 import { Controller, Post, Body, Get, Param, Patch, Delete } from '@nestjs/common';
 import { CategoryService } from './category.service';
-import { CreateCategoryDto } from './dto/create-category.dto'; // Import the DTO
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { UUID } from 'crypto';
 
@@ -9,7 +8,7 @@ export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
   @Post('create')
-  async create(@Body() createCategoryDto: CreateCategoryDto) {
+  async create(@Body() createCategoryDto: any) {
     return this.categoryService.create(createCategoryDto);
   }
 

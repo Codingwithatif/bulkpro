@@ -1,12 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
-import { CategoryService } from '../../../../shared/category.service';
-
-
 import { ComponentsWithFormsModule } from '../../../../components/components-with-forms.module';
-import { Observable } from 'rxjs';
 import { Category } from '../../../../models/category.model';
+import { CategoryService } from '../../../../shared/category.service';
+import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-category',
@@ -16,10 +14,12 @@ import { Category } from '../../../../models/category.model';
   styleUrl: './category.component.scss'
 })
 export class CategoryComponent implements OnInit {
-  category: Category = { name: '', description: '' };
+ category: Category = { name: '', description: '' };
    message = '';
  
-   constructor(private categoryService: CategoryService) {}
+   constructor(private categoryService: CategoryService, 
+     private http: HttpClient
+   ) {}
    ngOnInit(): void {
      throw new Error('Method not implemented.');
    }
@@ -29,15 +29,14 @@ export class CategoryComponent implements OnInit {
        this.message = 'Category name is required!';
        return;
      }
- 
-     this.categoryService.createCategory(this.category).subscribe({
-       next: (response) => {
-         this.message = response.message;
-         this.category = { name: '', description: '' }; // Reset form
-       },
-       error: (err) => {
-         this.message = 'Error: ' + err.error.message;
-       },
+     const category = {
+       name: this.category.name,
+       description: this.category.description,
+       user: 'company@gmail.com'
+     }
+     this.http.post('http://localhost:3000/categories/create', category).subscribe(a => {
+       console.log(a);
      });
+     
    }
  }

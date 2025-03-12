@@ -1,27 +1,41 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Category } from './entities/category.entity';
 import { UUID } from 'crypto';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class CategoryService {
   constructor(
     @InjectRepository(Category)
     private readonly categoryRepository: Repository<Category>,
+    private userSvc: UserService
   ) {}
 
   // Create a new category
-  async create(createCategoryDto: CreateCategoryDto) {
+  async create(createCategoryDto: any) {
     console.log('Received Data:', createCategoryDto); // 🛠 Debug log
 
     if (!createCategoryDto || !createCategoryDto.name) {
       throw new BadRequestException('Category name is required');
     }
 
-    const newCategory = this.categoryRepository.create(createCategoryDto);
+    const user = await this.userSvc.findUserByEmail(createCategoryDto.user);
+    if(!user) {
+      return null
+    }
+
+
+    const newCategory = this.categoryRepository.create({
+      ...createCategoryDto,
+      user,
+    });
+    
     await this.categoryRepository.save(newCategory);
 
     return {

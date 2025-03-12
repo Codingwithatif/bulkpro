@@ -1,6 +1,7 @@
 import { Product } from 'src/product/entities/product.entity';
 import { Base } from 'src/universal/entities/base.entity';
-import { Entity, Column, OneToOne } from 'typeorm';
+import { User } from 'src/user/entities/user.entity';
+import { Entity, Column, OneToOne, ManyToOne } from 'typeorm';
 
 @Entity('categories') // Table name in the database
 export class Category extends Base {
@@ -11,6 +12,9 @@ export class Category extends Base {
   @Column({ type: 'text', nullable: true })
   description?: string;
 
-   @OneToOne(() => Product, (product) => product.categories )
-    products: Product
+  @OneToOne(() => Product, (product) => product )
+  products: Product;
+
+  @ManyToOne(() => User, (user) => user.categories )
+  user: User;
 }

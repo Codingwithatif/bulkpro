@@ -4,6 +4,7 @@ import { ComponentsWithFormsModule } from '../../../../../components/components-
 import { Category } from '../../../../../models/category.model';
 import { CategoryService } from '../../../../../shared/category.service';
 import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-add-category',
@@ -14,27 +15,28 @@ import { Observable } from 'rxjs';
 })
 export class AddCategoryComponent implements OnInit {
   category: Category = { name: '', description: '' };
-  message = '';
-
-  constructor(private categoryService: CategoryService) {}
-  ngOnInit(): void {
-    throw new Error('Method not implemented.');
-  }
-
-  addCategory() {
-    if (!this.category.name) {
-      this.message = 'Category name is required!';
-      return;
-    }
-
-    this.categoryService.createCategory(this.category).subscribe({
-      next: (response) => {
-        this.message = response.message;
-        this.category = { name: '', description: '' }; // Reset form
-      },
-      error: (err) => {
-        this.message = 'Error: ' + err.error.message;
-      },
-    });
-  }
-}
+   message = '';
+ 
+   constructor(private categoryService: CategoryService, 
+     private http: HttpClient
+   ) {}
+   ngOnInit(): void {
+     throw new Error('Method not implemented.');
+   }
+ 
+   addCategory() {
+     if (!this.category.name) {
+       this.message = 'Category name is required!';
+       return;
+     }
+     const category = {
+       name: this.category.name,
+       description: this.category.description,
+       user: 'mart@gmail.com'
+     }
+     this.http.post('http://localhost:3000/categories/create', category).subscribe(a => {
+       console.log(a);
+     });
+     
+   }
+ }

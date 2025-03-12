@@ -42,7 +42,7 @@ export class UserService {
     const salt = await bcrypt.genSalt(10);
     data.password = await bcrypt.hash(data.password, salt);
 
-    const newUser = this.userRepo.create({ ...data, store: store });
+    const newUser = this.userRepo.create(data);
     const result = await this.userRepo.save<User>(newUser);
 
     return {

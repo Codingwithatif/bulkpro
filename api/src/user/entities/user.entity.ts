@@ -1,9 +1,9 @@
 
-import { Entity, Column, OneToOne } from 'typeorm';
+import { Entity, Column, OneToMany } from 'typeorm';
 
 import { UserRole } from '../dto/user.model';
 import { Base } from 'src/universal/entities/base.entity';
-import { Store } from 'src/store/entities/store.entity';
+import { Category } from 'src/category/entities/category.entity';
 @Entity()
 export class User extends Base {
 
@@ -28,9 +28,6 @@ export class User extends Base {
   @Column({ default: true })
   isActive: boolean;
 
-  // @OneToMany(() => Product, (prod) => prod.user)
-  // product: any;
-
-  @OneToOne(() => Store, (store) => store.storeOwner)
-  store: Store;
+  @OneToMany(() => Category, (category) => category.products )
+  categories: Category[];
 }

@@ -7,7 +7,6 @@ export interface IUser {
     password: string;
     address?: string;
     phoneNumber?: string;
-    store: IStore | null;
     role: UserRole;
     isActive?: boolean; // Added for user activation
     martId?: string; // Added for MART users
