@@ -11,12 +11,15 @@
 //   requestStatus?: 'Pending' | 'Approved' | 'Delivered' | null; // Status of restock request
 // }
 
+import { IUser } from "./auth.model";
+
 
 
 export interface Product {
   name: string;
   description: string;
   price: number;
-  category: string;
+  // category: string;
   quantity: number;
+  user: string;
 }

@@ -1,11 +1,11 @@
 
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, Column, OneToOne } from 'typeorm';
 
 import { UserRole } from '../dto/user.model';
+import { Base } from 'src/universal/entities/base.entity';
+import { Store } from 'src/store/entities/store.entity';
 @Entity()
-export class User {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+export class User extends Base {
 
   @Column({ nullable: true })
   name: string;
@@ -27,4 +27,10 @@ export class User {
  
   @Column({ default: true })
   isActive: boolean;
+
+  // @OneToMany(() => Product, (prod) => prod.user)
+  // product: any;
+
+  @OneToOne(() => Store, (store) => store.storeOwner)
+  store: Store;
 }

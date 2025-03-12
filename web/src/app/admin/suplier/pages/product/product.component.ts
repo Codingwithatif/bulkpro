@@ -15,7 +15,7 @@ import { ProductService } from '../../../../shared/product.service';
   styleUrls: ['./product.component.scss']
 })
 export class ProductComponent {
-  product: Product = { name: '', description: '', price: 0, category: '', quantity: 0 }; // Define initial product object
+  product!: Product; // Define initial product object
    message = '';
    categories: string[] = []; // Array to hold categories for product
  
@@ -26,7 +26,7 @@ export class ProductComponent {
    }
  
    addProduct() {
-     if (!this.product.name || !this.product.price || !this.product.category) {
+     if (!this.product.name || !this.product.price ) {
        this.message = 'All fields are required!';
        return;
      }
@@ -34,7 +34,7 @@ export class ProductComponent {
      this.productService.createProduct(this.product).subscribe({
        next: (response: { message: string; }) => {
          this.message = response.message;
-         this.product = { name: '', description: '', price: 0, category: '', quantity: 0 }; // Reset form
+        //  this.product = { name: '', description: '', price: 0, category: '', quantity: 0 }; // Reset form
        },
        error: (err: { error: { message: string; }; }) => {
          this.message = 'Error: ' + err.error.message;

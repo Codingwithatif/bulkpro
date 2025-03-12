@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity()
@@ -17,6 +18,7 @@ export class Product {
   @Column('int')
   stock: number;
 
-  @Column({ nullable: true }) // Now optional
-  categoryId?: string;
+
+  // @ManyToOne(() => User, (user) => user.product)
+  // user: IUser;
 }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 
@@ -7,7 +8,8 @@ import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcrypt';
-import { IUser } from './dto/user.model';
+import { UUID } from 'crypto';
+// import { Store } from 'src/store/entities/store.entity';
 
 @Injectable()
 export class UserService {
@@ -16,15 +18,18 @@ export class UserService {
     private readonly userRepo: Repository<User>,
   ) {}
 
-  async create(user: IUser) {
-    if (!user) {
+  async create(data: any) {
+    const { store } = data;
+         console.log(store);
+         
+    if (!data) {
       return {
         status: HttpStatus.BAD_REQUEST,
         message: 'User data not provided',
       };
     }
 
-    const existingUser = await this.userRepo.findOne({ where: { email: user.email } });
+    const existingUser = await this.userRepo.findOne({ where: { email: data.email } });
 
     if (existingUser) {
       return {
@@ -35,9 +40,9 @@ export class UserService {
 
     // Encrypt user password
     const salt = await bcrypt.genSalt(10);
-    user.password = await bcrypt.hash(user.password, salt);
+    data.password = await bcrypt.hash(data.password, salt);
 
-    const newUser = this.userRepo.create(user);
+    const newUser = this.userRepo.create({ ...data, store: store });
     const result = await this.userRepo.save<User>(newUser);
 
     return {
@@ -91,7 +96,7 @@ export class UserService {
     return user;
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto & { password?: string }) {
+  async update(id: UUID, updateUserDto: UpdateUserDto & { password?: string }) {
     const user = await this.userRepo.findOne({ where: { id } });
 
     if (!user) {
@@ -114,7 +119,7 @@ export class UserService {
     };
   }
 
-  async remove(id: string) {
+  async remove(id: UUID) {
     const user = await this.userRepo.findOne({ where: { id } });
 
     if (!user) {

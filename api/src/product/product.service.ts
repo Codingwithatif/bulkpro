@@ -5,12 +5,14 @@ import { Repository } from 'typeorm';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './entities/product.entity';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class ProductService {
   constructor(
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
+    private userSvc: UserService
   ) {}
 
   // Create a new product
@@ -21,8 +23,13 @@ export class ProductService {
       throw new BadRequestException('Product name is required');
     }
 
+    const user = await this.userSvc.findUserByEmail(createProductDto.user)
+    if(!user) {
+      return null;
+    }
+
     const newProduct = this.productRepository.create(createProductDto);
-    await this.productRepository.save(newProduct);
+    await this.productRepository.save({...newProduct, user: user});
 
     return {
       statusCode: 201,

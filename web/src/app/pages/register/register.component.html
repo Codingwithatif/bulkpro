@@ -12,105 +12,74 @@
           <h4>Registration Form</h4>
         </div>
         <div class="card-body px-5 py-4">
-          <form [formGroup]="registerForm" (ngSubmit)="registerMart(  )">
+          <form [formGroup]="registerForm" (ngSubmit)="registerMart()">
 
-            <!-- Role Selection as Dropdown -->
+            <!-- Role Selection -->
             <div class="mb-4">
               <label for="role" class="form-label">Register as:</label>
-              <select class="form-select" id="role" formControlName="role" required>
-                <option value="" disabled> -- Select Role --</option>
-                <option [value]="userRole.COMPANY">{{userRole.COMPANY}}</option>
-                <option [value]="userRole.MART">{{userRole.MART}}</option>
+              <select class="form-select" id="role" formControlName="role"  required>
+                <option value="" disabled>-- Select Role --</option>
+                <option [value]="userRole.COMPANY">{{ userRole.COMPANY }}</option>
+                <option [value]="userRole.MART">{{ userRole.MART }}</option>
               </select>
-              
-              <div *ngIf="registerForm.get('role')?.invalid && registerForm.get('role')?.touched" class="invalid-feedback">
-                Role is required.
-              </div>
             </div>
 
             <!-- Mart/Company Name -->
             <div class="mb-4">
-              <label for="martName" class="form-label">{{registerForm.controls['role'].value }} Name</label>
-              <input 
-                type="text" 
-                class="form-control" 
-                id="martName" 
-                formControlName="martName" 
-                placeholder="Enter your mart or company name" 
-                required>
-              <div *ngIf="registerForm.get('martName')?.invalid && registerForm.get('martName')?.touched" class="invalid-feedback">
-                {{registerForm.controls['role'].value }} Name is required.
-              </div>
+              <label for="martName" class="form-label">{{ registerForm.controls['role'].value }} Name</label>
+              <input type="text" class="form-control" id="martName" formControlName="martName" placeholder="Enter name" required>
             </div>
 
             <!-- Email -->
             <div class="mb-4">
               <label for="email" class="form-label">Email</label>
-              <input 
-                type="email" 
-                class="form-control" 
-                id="email" 
-                formControlName="email" 
-                placeholder="Enter your email" 
-                required>
-              <div *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" class="invalid-feedback">
-                Please enter a valid email.
-              </div>
+              <input type="email" class="form-control" id="email" formControlName="email" placeholder="Enter email" required>
             </div>
 
             <!-- Phone Number -->
             <div class="mb-4">
               <label for="phone" class="form-label">Phone Number</label>
-              <input 
-                type="text" 
-                class="form-control" 
-                id="phone" 
-                formControlName="phone" 
-                placeholder="Enter your phone number" 
-                required>
-              <div *ngIf="registerForm.get('phone')?.invalid && registerForm.get('phone')?.touched" class="invalid-feedback">
-                Please enter a valid phone number.
-              </div>
+              <input type="text" class="form-control" id="phone" formControlName="phone" placeholder="Enter phone number" required>
             </div>
 
             <!-- Address -->
             <div class="mb-4">
               <label for="address" class="form-label">Address</label>
-              <input 
-                type="text" 
-                class="form-control" 
-                id="address" 
-                formControlName="address" 
-                placeholder="Enter your address" 
-                required>
-              <div *ngIf="registerForm.get('address')?.invalid && registerForm.get('address')?.touched" class="invalid-feedback">
-                Address is required.
-              </div>
+              <input type="text" class="form-control" id="address" formControlName="address" placeholder="Enter address" required>
             </div>
+
+            <!-- Store Details (Only for MART Registration) -->
+              <h5 class="text-center mt-4">Store Details</h5>
+
+              <div class="mb-4">
+                <label for="storeName" class="form-label">Store Name</label>
+                <input type="text" class="form-control" id="storeName" formControlName="storeName" placeholder="Enter store name">
+              </div>
+
+              <div class="mb-4">
+                <label for="ownerName" class="form-label">Owner Name</label>
+                <input type="text" class="form-control" id="ownerName" formControlName="ownerName" placeholder="Enter owner name">
+              </div>
+
+              <div class="mb-4">
+                <label for="storeAddress" class="form-label">Store Address</label>
+                <input type="text" class="form-control" id="storeAddress" formControlName="storeAddress" placeholder="Enter store address">
+              </div>
+
+              <div class="mb-4">
+                <label for="storeRegistration" class="form-label">Store Registration Number</label>
+                <input type="text" class="form-control" id="storeRegistration" formControlName="storeRegistration" placeholder="Enter store registration number">
+              </div>
 
             <!-- Password -->
             <div class="mb-4">
               <label for="password" class="form-label">Password</label>
-              <input 
-                type="password" 
-                class="form-control" 
-                id="password" 
-                formControlName="password" 
-                placeholder="Enter a password" 
-                required>
-              <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" class="invalid-feedback">
-                Password must be at least 6 characters long.
-              </div>
+              <input type="password" class="form-control" id="password" formControlName="password" placeholder="Enter password" required>
             </div>
 
             <!-- Submit Button -->
             <div class="d-grid">
-              <button type="submit" class="btn btn-primary btn-block" [disabled]="registerForm.invalid">Register</button>
-            </div>
-            <div *ngIf="loading" class="text-center mt-3 loader-container">
-              <div class="dot"></div>
-              <div class="dot"></div>
-              <div class="dot"></div>
+              <button type="submit" class="btn btn-primary btn-block" >Register</button>
             </div>
 
           </form>

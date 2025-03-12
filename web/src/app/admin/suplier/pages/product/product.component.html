@@ -65,7 +65,7 @@
       <label for="category">Category:</label>
       <select 
         id="category" 
-        [(ngModel)]="product.category" 
+        [(ngModel)]="product" 
         name="category" 
         class="form-control"
         required
@@ -73,7 +73,7 @@
         <option value="" disabled>Select a category</option>
         <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
       </select>
-      <div *ngIf="!product.category" class="error-message">Category is required.</div>
+      <div *ngIf="!product" class="error-message">Category is required.</div>
     </div>
 
     <button 

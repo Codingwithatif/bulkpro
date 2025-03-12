@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../shared/auth.service';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { IUser, UserRole } from '../../models/auth.model';
+import { IStore, IUser, UserRole } from '../../models/auth.model';
 
 @Component({
   selector: 'app-register',
@@ -21,62 +21,60 @@ export class RegisterComponent {
   authService = inject(AuthService);
   loading: boolean = false; 
   userRole = UserRole;
+  isStore = false; // Flag to show store fields
 
   constructor(private fb: FormBuilder) {
     this.registerForm = this.fb.group({
       role: ['', Validators.required],
-      name: ['Mart', Validators.required], // martName will be the username
-      email: ['Mart@aaa.com', [Validators.required, Validators.email]],
-      phoneNumber: ['1122345668897', [Validators.required, Validators.pattern('^[0-9]{10,15}$')]], // Updated pattern for phone numbers
-      address: ['Mart', Validators.required],
-      password: ['password', [Validators.required, Validators.minLength(6)]],
-      martId: [''], // Added martId
-      companyId: [''] // Added companyId
+      martName: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      phone: ['', [Validators.required, Validators.pattern('^[0-9]{10,15}$')]],
+      address: ['', Validators.required],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      storeName: [''],
+      ownerName: [''],
+      storeAddress: [''],
+      storeRegistration: ['']
     });
   }
 
-  /**
-   * Registers the user and navigates to the login page upon success.
-   */
+  onRoleChange(event: any) {
+    const role = event.target.value;
+    this.isStore = role === this.userRole.MART;
+
+    if (this.isStore) {
+      this.registerForm.get('storeName')?.setValidators(Validators.required);
+      this.registerForm.get('ownerName')?.setValidators(Validators.required);
+      this.registerForm.get('storeAddress')?.setValidators(Validators.required);
+    } else {
+      this.registerForm.get('storeName')?.clearValidators();
+      this.registerForm.get('ownerName')?.clearValidators();
+      this.registerForm.get('storeAddress')?.clearValidators();
+    }
+
+    this.registerForm.get('storeName')?.updateValueAndValidity();
+    this.registerForm.get('ownerName')?.updateValueAndValidity();
+    this.registerForm.get('storeAddress')?.updateValueAndValidity();
+  }
+
   registerMart() {
     const formValue = this.registerForm.value;
+    const store: IStore = {
+      storeName: formValue.storeName
+    }
     const user: IUser = {
-      name: formValue.name,
+      name: formValue.martName,
       password: formValue.password,
       email: formValue.email,
       address: formValue.address,
-      phoneNumber: formValue.phoneNumber,
+      phoneNumber: formValue.phone,
       role: formValue.role,
-      martId: formValue.role === UserRole.MART ? formValue.martId : undefined,
-      companyId: formValue.role === UserRole.COMPANY ? formValue.companyId : undefined
-    }
-    this.authService.register(user).subscribe(a => {
-      console.log(a)
-    })
-  }
+      store: store
+    };
 
-  /**
-   * Handles form submission
-   */
-  onSubmit(): void {
-    this.registerMart();
-  }
-
-  /**
-   * Returns a user-friendly error message based on Firebase error codes.
-   * @param error Firebase error object
-   * @returns string
-   */
-  getErrorMessage(error: any): string {
-    switch (error.code) {
-      case 'auth/email-already-in-use':
-        return 'This email is already in use. Please try logging in.';
-      case 'auth/invalid-email':
-        return 'The email address is not valid.';
-      case 'auth/weak-password':
-        return 'The password is too weak.';
-      default:
-        return 'An unexpected error occurred. Please try again.';
-    }
+    this.authService.register(user).subscribe(response => {
+      console.log(response);
+      this.router.navigate(['/login']);
+    });
   }
 }

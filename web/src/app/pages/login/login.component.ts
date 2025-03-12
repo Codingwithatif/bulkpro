@@ -36,6 +36,9 @@ export class LoginComponent {
       }
       this.http.post<IGenericResponse<IUser>>('http://localhost:3000/user/login', user).subscribe(resp => {
         if(resp.status === HttpStatusCode.Ok) {
+          localStorage.setItem('user', JSON.stringify(resp.data));
+          console.log(resp.data);
+          
           if(resp.data.role === UserRole.MART ) {
             console.log('Mart ID:', resp.data.id);
             this.router.navigate(['/admin/consumer'])

@@ -14,26 +14,38 @@ import { ProductService } from '../../../../../shared/product.service';
   styleUrls: ['./add-product.component.scss'],
 })
 export class AddProductComponent implements OnInit {
-  product: Product = { name: '', description: '', price: 0, category: '', quantity: 0 }; // Define initial product object
+  productForm: FormGroup;
   message = '';
   categories: string[] = []; // Array to hold categories for product
 
-  constructor(private productService: ProductService) {}
+  constructor(private productService: ProductService, private fb: FormBuilder) {
+    this.productForm = this.fb.group({
+      name: ['', Validators.required],
+      description: [''],
+      price: ['', [Validators.required, Validators.min(0)]],
+      quantity: ['', [Validators.required, Validators.min(0)]]
+    });
+  }
 
   ngOnInit(): void {
     // You can call a method here to load categories or other data if needed
   }
 
   addProduct() {
-    if (!this.product.name || !this.product.price || !this.product.category) {
+    if (this.productForm.invalid) {
       this.message = 'All fields are required!';
       return;
     }
 
-    this.productService.createProduct(this.product).subscribe({
+    const product: Product = {
+      ...this.productForm.value,
+      user: 'company@gmail.com'
+    };
+
+    this.productService.createProduct(product).subscribe({
       next: (response: { message: string; }) => {
         this.message = response.message;
-        this.product = { name: '', description: '', price: 0, category: '', quantity: 0 }; // Reset form
+        this.productForm.reset(); // Reset form after submission
       },
       error: (err: { error: { message: string; }; }) => {
         this.message = 'Error: ' + err.error.message;

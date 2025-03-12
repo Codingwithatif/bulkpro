@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { CompanyProductService } from '../../../../shared/company-product.service'; // Import the service
 import { Category } from '../../../../models/category.model'; // Import the category model
 import { Product } from '../../../../models/product.model'; // Import the product model
 import { ComponentsWithFormsModule } from '../../../../components/components-with-forms.module';
 import { ProductService } from '../../../../shared/product.service';
+import { IUser } from '../../../../models/auth.model';
 
 @Component({
   selector: 'app-product',
@@ -15,31 +14,42 @@ import { ProductService } from '../../../../shared/product.service';
   styleUrls: ['./product.component.scss']
 })
 export class ProductComponent {
-  product: Product = { name: '', description: '', price: 0, category: '', quantity: 0 }; // Define initial product object
-    message = '';
-    categories: string[] = []; // Array to hold categories for product
-  
-    constructor(private productService: ProductService) {}
-  
-    ngOnInit(): void {
-      // You can call a method here to load categories or other data if needed
-    }
-  
-    addProduct() {
-      if (!this.product.name || !this.product.price || !this.product.category) {
-        this.message = 'All fields are required!';
-        return;
-      }
-  
-      this.productService.createProduct(this.product).subscribe({
-        next: (response: { message: string; }) => {
-          this.message = response.message;
-          this.product = { name: '', description: '', price: 0, category: '', quantity: 0 }; // Reset form
-        },
-        error: (err: { error: { message: string; }; }) => {
-          this.message = 'Error: ' + err.error.message;
-        },
-      });
-    }
+  productForm: FormGroup;
+  message = '';
+  categories: string[] = []; // Array to hold categories for product
+
+  constructor(private productService: ProductService, private fb: FormBuilder) {
+    this.productForm = this.fb.group({
+      name: ['', Validators.required],
+      description: [''],
+      price: ['', [Validators.required, Validators.min(0)]],
+      quantity: ['', [Validators.required, Validators.min(0)]]
+    });
   }
-  
+
+  ngOnInit(): void {
+    // You can call a method here to load categories or other data if needed
+  }
+
+  addProduct() {
+    if (this.productForm.invalid) {
+      this.message = 'All fields are required!';
+      return;
+    }
+
+    const product: Product = {
+      ...this.productForm.value,
+      user: 'company@gmail.com'
+    };
+
+    this.productService.createProduct(product).subscribe({
+      next: (response: { message: string; }) => {
+        this.message = response.message;
+        this.productForm.reset(); // Reset form after submission
+      },
+      error: (err: { error: { message: string; }; }) => {
+        this.message = 'Error: ' + err.error.message;
+      },
+    });
+  }
+}

@@ -17,4 +17,6 @@ export class CreateProductDto {
   @IsUUID()
   @IsOptional()
   categoryId?: string; 
+
+  user: any;
 }

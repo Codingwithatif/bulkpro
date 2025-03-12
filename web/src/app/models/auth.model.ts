@@ -7,10 +7,20 @@ export interface IUser {
     password: string;
     address?: string;
     phoneNumber?: string;
+    store: IStore | null;
     role: UserRole;
     isActive?: boolean; // Added for user activation
     martId?: string; // Added for MART users
     companyId?: string; // Added for COMPANY users
+}
+
+export interface IStore {
+  storeName: string;
+  ownerName?: string;
+  storeAddress?: string;
+  storeRegistration?: string;
+  martId?: string;
+  companyId?: string;
 }
 
 export enum UserRole {
