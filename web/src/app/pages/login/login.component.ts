@@ -36,6 +36,8 @@ export class LoginComponent {
       }
       this.http.post<IGenericResponse<IUser>>('http://localhost:3000/user/login', user).subscribe(resp => {
         if(resp.status === HttpStatusCode.Ok) {
+          console.log(resp.data);
+          
           localStorage.setItem('user', JSON.stringify(resp.data));
           console.log(resp.data);
           

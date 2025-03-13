@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ComponentsWithFormsModule } from '../../../../../components/components-with-forms.module';
-import { Product } from '../../../../../models/product.model';  // Import Product model
+import { ComponentsWithFormsModule } from '../../../components/components-with-forms.module';
+import { Product } from '../../../models/product.model';  // Import Product model
   // Import ProductService
 import { Observable } from 'rxjs';
-import { ProductService } from '../../../../../shared/product.service';
+import { ProductService } from '../../../shared/product.service';
 
 @Component({
   selector: 'app-add-product',

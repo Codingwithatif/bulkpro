@@ -28,20 +28,20 @@ export const routes: Routes = [
         (mod) => mod.CompanyDashboardComponent
       ),
     children: [
-      {
-        path: 'category', // Path for managing categories
-        loadComponent: () =>
-          import('../app/pages/company-dashboard/company-category/category/category.component').then(
-            (mod) => mod.CategoryComponent
-          ),
-      },
-      {
-        path: 'product', // Path for managing products
-        loadComponent: () =>
-          import('../app/pages/company-dashboard/company-category/product/product.component').then(
-            (mod) => mod.ProductComponent
-          ),
-      },
+      // {
+      //   path: 'category', // Path for managing categories
+      //   loadComponent: () =>
+      //     import('../app/pages/company-dashboard/company-category/category/category.component').then(
+      //       (mod) => mod.CategoryComponent
+      //     ),
+      // },
+      // {
+      //   path: 'product', // Path for managing products
+      //   loadComponent: () =>
+      //     import('../app/pages/company-dashboard/company-category/product/product.component').then(
+      //       (mod) => mod.ProductComponent
+      //     ),
+      // },
       // Add other child routes for the company dashboard as needed
     ],
   },

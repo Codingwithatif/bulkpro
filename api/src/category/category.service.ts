@@ -25,11 +25,10 @@ export class CategoryService {
       throw new BadRequestException('Category name is required');
     }
 
-    const user = await this.userSvc.findUserByEmail(createCategoryDto.user);
+    const user = await this.userSvc.findUserByEmail(createCategoryDto.user.email);
     if(!user) {
       return null
     }
-
 
     const newCategory = this.categoryRepository.create({
       ...createCategoryDto,

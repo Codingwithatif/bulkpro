@@ -20,18 +20,17 @@ export const ADMIN_ROUTES: Routes = [
       {
         path: 'add-category',
         loadComponent: () =>
-          import('./consumer/pages/category/add-category/add-category.component').then(
+          import('./shared/add-category/add-category.component').then(
             (mod) => mod.AddCategoryComponent
           ),
       },
       {
         path: 'add-product',
         loadComponent: () =>
-          import('./consumer/pages/category/add-product/add-product.component').then(
+          import('./shared/add-product/add-product.component').then(
             (mod) => mod.AddProductComponent
           ),
       },
-    
     
     ],
   },
@@ -52,17 +51,17 @@ export const ADMIN_ROUTES: Routes = [
         title: 'Supplier Dashboard',
       },
       {
-        path: 'category',
+        path: 'add-category',
         loadComponent: () =>
-          import('./suplier/pages/category/category.component').then(
-            (mod) => mod.CategoryComponent
+          import('./shared/add-category/add-category.component').then(
+            (mod) => mod.AddCategoryComponent
           ),
       },
       {
-        path: 'product',
+        path: 'add-product',
         loadComponent: () =>
-          import('./suplier/pages/product/product.component').then(
-            (mod) => mod.ProductComponent
+          import('./shared/add-product/add-product.component').then(
+            (mod) => mod.AddProductComponent
           ),
       },
     ],

@@ -6,7 +6,7 @@ import { RouterLink, RouterOutlet } from '@angular/router';
 @Component({
   selector: 'app-company-dashboard',
   standalone: true,
-  imports: [RouterOutlet, CommonModule],
+  imports: [ CommonModule],
   templateUrl: './company-dashboard.component.html',
   styleUrl: './company-dashboard.component.scss'
 })

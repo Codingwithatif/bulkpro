@@ -4,7 +4,7 @@ declare var $: any;
 @Component({
   selector: 'app-c-sidebar',
   standalone: true,
-  imports: [RouterLink],
+  imports: [],
   templateUrl: './c-sidebar.component.html',
   styleUrl: './c-sidebar.component.scss'
 })
