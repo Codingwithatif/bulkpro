@@ -1,22 +1,25 @@
-
-import { IsString, IsNumber, IsUUID, IsOptional } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsUUID } from 'class-validator';
 
 export class CreateProductDto {
-  @IsString()
+  @IsNotEmpty()
   name: string;
 
-  @IsString()
-  description: string;
+  @IsOptional()
+  description?: string;
 
   @IsNumber()
+  @IsNotEmpty()
   price: number;
 
   @IsNumber()
-  stock: number;  // Ensure this matches DTO
+  @IsOptional()
+  quantity?: number; // Optional with default value
+
+  @IsNumber()
+  @IsOptional()
+  thresholdLimit?: number; // Optional with default value
 
   @IsUUID()
-  @IsOptional()
-  categoryId?: string; 
-
-  user: any;
+  @IsNotEmpty()
+  categoryId: string; // Ensure categoryId is a valid UUID
 }

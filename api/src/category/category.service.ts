@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -11,6 +10,7 @@ import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class CategoryService {
+  [x: string]: any;
   constructor(
     @InjectRepository(Category)
     private readonly categoryRepository: Repository<Category>,
@@ -21,10 +21,12 @@ export class CategoryService {
   async create(createCategoryDto: any) {
     console.log('Received Data:', createCategoryDto); // 🛠 Debug log
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     if (!createCategoryDto || !createCategoryDto.name) {
       throw new BadRequestException('Category name is required');
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     const user = await this.userSvc.findUserByEmail(createCategoryDto.user.email);
     if(!user) {
       return null

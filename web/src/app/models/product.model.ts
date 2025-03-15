@@ -1,25 +1,10 @@
-// export interface Product {
-//   id: string;
-//   productName: string;
-//   price: number;
-//   quantity: number;
-//   stock: number;
-//   barcode: string;
-//   thresholdLimit: number;
-//   categoryId: string; // The ID of the category this product belongs to
-//   companyId?: string; // Optional: ID of the company supplying the product
-//   requestStatus?: 'Pending' | 'Approved' | 'Delivered' | null; // Status of restock request
-// }
-
-import { IUser } from "./auth.model";
-
-
-
 export interface Product {
+  id?: number; // Optional (auto-generated)
   name: string;
-  description: string;
+  description?: string;
   price: number;
-  // category: string;
   quantity: number;
-  user: string;
+  thresholdLimit: number;
+  
+  categoryId: string; // Links product to a category
 }

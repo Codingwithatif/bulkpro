@@ -1,23 +1,27 @@
-
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, Patch, Delete, Query } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { UUID } from 'crypto';
 
-@Controller('product')
+@Controller('products')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
-  @Post("create")
+  @Post('create')
   async create(@Body() createProductDto: CreateProductDto) {
     return this.productService.create(createProductDto);
   }
 
+  // @Get()
+  // async findAll() {
+  //   return this.productService.findAll();
+  // }
+
   @Get()
-  async findAll() {
-    return this.productService.findAll();
-  }
+async findAll(@Query('ownerId') ownerId: string) {
+  return this.productService.findAll(ownerId);
+}
 
   @Get(':id')
   async findOne(@Param('id') id: UUID) {

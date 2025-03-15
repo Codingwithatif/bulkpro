@@ -10,6 +10,9 @@ import { catchError, switchMap } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class AuthService {
+  getLoggedInUser(): { id: string; role: string; } {
+    throw new Error('Method not implemented.');
+  }
   /**
    *
    */

@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ComponentsWithFormsModule } from '../../../components/components-with-forms.module';
-import { Product } from '../../../models/product.model';  // Import Product model
-  // Import ProductService
-import { Observable } from 'rxjs';
+import { CategoryService } from '../../../shared/category.service';
 import { ProductService } from '../../../shared/product.service';
 
 @Component({
@@ -14,42 +12,77 @@ import { ProductService } from '../../../shared/product.service';
   styleUrls: ['./add-product.component.scss'],
 })
 export class AddProductComponent implements OnInit {
-  productForm: FormGroup;
+  productForm!: FormGroup;
+  categories: any[] = [];
   message = '';
-  categories: string[] = []; // Array to hold categories for product
 
-  constructor(private productService: ProductService, private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private categoryService: CategoryService,
+    private productService: ProductService
+  ) {}
+
+  ngOnInit(): void {
     this.productForm = this.fb.group({
       name: ['', Validators.required],
       description: [''],
-      price: ['', [Validators.required, Validators.min(0)]],
-      quantity: ['', [Validators.required, Validators.min(0)]]
+      price: [null, [Validators.required, Validators.min(1)]],
+      quantity: [null, [Validators.required, Validators.min(1)]],
+      thresholdLimit: [null, [Validators.required, Validators.min(1)]],
+      barcode: [{ value: this.generateBarcode(), disabled: true }],
+      categoryId: [null, Validators.required],
     });
+
+    this.loadCategories();
   }
 
-  ngOnInit(): void {
-    // You can call a method here to load categories or other data if needed
+  private loadCategories() {
+    this.categoryService.getCategories().subscribe({
+      next: (response: any) => {
+        console.log('Fetched categories:', response); // Debugging
+  
+        // Ensure we extract categories from the `data` field
+        if (response?.data && Array.isArray(response.data)) {
+          this.categories = response.data;
+        } else {
+          console.error('Unexpected category response format:', response);
+          this.message = 'Error loading categories!';
+        }
+      },
+      error: (error) => {
+        console.error('Error fetching categories:', error);
+        this.message = 'Failed to load categories!';
+      }
+    });
   }
+  
+  
 
   addProduct() {
     if (this.productForm.invalid) {
-      this.message = 'All fields are required!';
+      this.message = 'Please fill in all required fields!';
       return;
     }
 
-    const product: Product = {
-      ...this.productForm.value,
-      user: 'company@gmail.com'
-    };
+    const productData = this.productForm.getRawValue();
 
-    this.productService.createProduct(product).subscribe({
-      next: (response: { message: string; }) => {
-        this.message = response.message;
-        this.productForm.reset(); // Reset form after submission
+    console.log('Submitting Product:', productData);
+
+    this.productService.createProduct(productData).subscribe({
+      next: (response) => {
+        console.log('Product added:', response);
+        this.message = 'Product added successfully!';
+        this.productForm.reset();
+        this.productForm.patchValue({ barcode: this.generateBarcode() }); // Reset barcode
       },
-      error: (err: { error: { message: string; }; }) => {
-        this.message = 'Error: ' + err.error.message;
-      },
+      error: (error) => {
+        console.error('Error adding product:', error);
+        this.message = 'Failed to add product!';
+      }
     });
+  }
+
+  private generateBarcode(): string {
+    return 'BC' + Math.floor(Math.random() * 1000000).toString();
   }
 }
