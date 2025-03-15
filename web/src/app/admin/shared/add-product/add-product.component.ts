@@ -39,11 +39,12 @@ export class AddProductComponent implements OnInit {
   private loadCategories() {
     this.categoryService.getCategories().subscribe({
       next: (response: any) => {
-        console.log('Fetched categories:', response); // Debugging
   
         // Ensure we extract categories from the `data` field
         if (response?.data && Array.isArray(response.data)) {
           this.categories = response.data;
+        console.log('Fetched categories:', this.categories); // Debugging
+
         } else {
           console.error('Unexpected category response format:', response);
           this.message = 'Error loading categories!';
@@ -54,9 +55,7 @@ export class AddProductComponent implements OnInit {
         this.message = 'Failed to load categories!';
       }
     });
-  }
-  
-  
+  } 
 
   addProduct() {
     if (this.productForm.invalid) {

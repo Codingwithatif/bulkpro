@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AuthService } from '../../shared/auth.service';
+import { AuthService } from '../../../shared/auth.service';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { IStore, IUser, UserRole } from '../../models/auth.model';
+import { IStore, IUser, UserRole } from '../../../models/auth.model';
 
 @Component({
   selector: 'app-register',

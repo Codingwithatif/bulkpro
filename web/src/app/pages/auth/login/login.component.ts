@@ -2,9 +2,9 @@ import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../../shared/auth.service';
+import { AuthService } from '../../../shared/auth.service';
 import { HttpClient, HttpStatusCode } from '@angular/common/http';
-import { IGenericResponse, IUser, UserRole } from '../../models/auth.model';
+import { IGenericResponse, IUser, UserRole } from '../../../models/auth.model';
 
 @Component({
   selector: 'app-login',

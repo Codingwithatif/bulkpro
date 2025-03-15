@@ -22,6 +22,7 @@ import { StoreModule } from './store/store.module';
       synchronize: true,  // Auto syncs DB schema (disable in production)
       autoLoadEntities: true
     }),
+    
     UserModule,
     CategoryModule,
     ProductModule,

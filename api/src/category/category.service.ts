@@ -47,7 +47,7 @@ export class CategoryService {
   }
 
   // Get all categories
-  async findAll(data: any) {
+  async findAllCategoriesForSpeceficUser(data: any) {
     const user = await this.userSvc.findUserByEmail(data);
     if(!user) {
       return null;

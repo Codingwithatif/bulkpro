@@ -14,7 +14,7 @@ export class CategoryController {
 
   @Get("getAllCategories")
   async findAll(@Query('user') user: any) {
-    return this.categoryService.findAll(user);
+    return this.categoryService.findAllCategoriesForSpeceficUser(user);
   }
 
   @Get(':id')

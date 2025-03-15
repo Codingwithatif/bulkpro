@@ -10,14 +10,14 @@ export const routes: Routes = [
   {
     path: 'login',
     loadComponent: () =>
-      import('../app/pages/login/login.component').then(
+      import('./pages/auth/login/login.component').then(
         (mod) => mod.LoginComponent
       ),
   },
   {
     path: 'register',
     loadComponent: () =>
-      import('../app/pages/register/register.component').then(
+      import('./pages/auth/register/register.component').then(
         (mod) => mod.RegisterComponent
       ),
   },
