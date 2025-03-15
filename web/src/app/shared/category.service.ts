@@ -16,6 +16,10 @@ export class CategoryService {
   }
 
   getCategories(): Observable<Category[]> {
-    return this.http.get<Category[]>(this.apiUrl);
+    
+    let data: any = localStorage.getItem('user');
+    data = data ?  JSON.parse(data) : null;
+    
+    return this.http.get<Category[]>(`http://localhost:3000/categories/getAllCategories/?user=${data?.email}` );
   }
 }

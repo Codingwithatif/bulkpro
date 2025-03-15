@@ -15,6 +15,6 @@ export class Category extends Base {
   @OneToOne(() => Product, (product) => product )
   products: Product;
 
-  @ManyToOne(() => User, (user) => user.categories )
+  @ManyToOne(() => User, (user) => user.category )
   user: User;
 }

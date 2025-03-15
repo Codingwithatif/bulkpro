@@ -29,5 +29,6 @@ export class User extends Base {
   isActive: boolean;
 
   @OneToMany(() => Category, (category) => category.products )
-  categories: Category[];
+  category: Category[];
+  
 }

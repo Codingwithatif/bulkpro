@@ -47,8 +47,17 @@ export class CategoryService {
   }
 
   // Get all categories
-  async findAll() {
-    const categories = await this.categoryRepository.find();
+  async findAll(data: any) {
+    const user = await this.userSvc.findUserByEmail(data);
+    if(!user) {
+      return null;
+    }
+    
+    const categories = await this.categoryRepository.find({ 
+      where: { user: { id: user.id} }, 
+      relations: ['user']
+    });
+
     return {
       statusCode: 200,
       message: 'Categories retrieved successfully',

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -44,14 +44,10 @@ export class ProductService {
     };
   }
 
-  async findAll(ownerId: string) {
-    const products = await this.productRepository
-      .createQueryBuilder('product')
-      .innerJoinAndSelect('product.category', 'category')
-      .innerJoinAndSelect('category.owner', 'owner') // Join with owner (mart or company)
-      .where('category.owner.id = :ownerId', { ownerId }) // Filter by owner ID
-      .getMany();
-  
+  // Get all products
+  async findAll() {
+    
+    const products = await this.productRepository.find({where: {},  relations: ['category'] });
     return {
       statusCode: 200,
       message: 'Products retrieved successfully',

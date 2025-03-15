@@ -22,7 +22,6 @@ export class Product {
   @Column()
   thresholdLimit: number;
 
-
   @ManyToOne(() => Category, (category) => category.products, { onDelete: 'CASCADE' }) // ✅ Ensures products are deleted if category is removed
   category: Category;
 }

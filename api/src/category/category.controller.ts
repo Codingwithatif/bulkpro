@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Param, Patch, Delete } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, Patch, Delete, Query } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { UUID } from 'crypto';
@@ -12,9 +12,9 @@ export class CategoryController {
     return this.categoryService.create(createCategoryDto);
   }
 
-  @Get()
-  async findAll() {
-    return this.categoryService.findAll();
+  @Get("getAllCategories")
+  async findAll(@Query('user') user: any) {
+    return this.categoryService.findAll(user);
   }
 
   @Get(':id')

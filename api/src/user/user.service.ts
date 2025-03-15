@@ -75,6 +75,7 @@ export class UserService {
 
   async findAll() {
     const users = await this.userRepo.find();
+
     return {
       status: HttpStatus.OK,
       message: 'All users retrieved successfully',
@@ -87,7 +88,7 @@ export class UserService {
       throw new NotFoundException(`User with email ${email} not found`);
     }
     
-    const user = await this.userRepo.findOne({ where: { email } });
+    const user = await this.userRepo.findOne({ where: { email: email } });
 
     if (!user) {
       throw new NotFoundException(`User with email ${email} not found`);
