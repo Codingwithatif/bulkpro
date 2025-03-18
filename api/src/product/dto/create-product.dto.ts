@@ -1,4 +1,5 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsUUID } from 'class-validator';
+
+import { IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID } from 'class-validator';
 
 export class CreateProductDto {
   @IsNotEmpty()
@@ -18,6 +19,10 @@ export class CreateProductDto {
   @IsNumber()
   @IsOptional()
   thresholdLimit?: number; // Optional with default value
+  
+  @IsOptional()
+  @IsString()
+  code?: string;
 
   @IsUUID()
   @IsNotEmpty()

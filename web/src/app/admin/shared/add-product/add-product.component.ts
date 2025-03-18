@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ComponentsWithFormsModule } from '../../../components/components-with-forms.module';
 import { CategoryService } from '../../../shared/category.service';
 import { ProductService } from '../../../shared/product.service';
+import JsBarcode from 'jsbarcode';
 
 @Component({
   selector: 'app-add-product',
@@ -12,9 +13,13 @@ import { ProductService } from '../../../shared/product.service';
   styleUrls: ['./add-product.component.scss'],
 })
 export class AddProductComponent implements OnInit {
+  @ViewChild('barcodeCanvas', { static: false }) barcodeCanvas!: ElementRef;
+
   productForm!: FormGroup;
   categories: any[] = [];
   message = '';
+  barcode = '';
+isSubmitting: boolean | undefined;
 
   constructor(
     private fb: FormBuilder,
@@ -29,7 +34,7 @@ export class AddProductComponent implements OnInit {
       price: [null, [Validators.required, Validators.min(1)]],
       quantity: [null, [Validators.required, Validators.min(1)]],
       thresholdLimit: [null, [Validators.required, Validators.min(1)]],
-      barcode: [{ value: this.generateBarcode(), disabled: true }],
+      code: ['', Validators.required], // Added product code input
       categoryId: [null, Validators.required],
     });
 
@@ -39,12 +44,9 @@ export class AddProductComponent implements OnInit {
   private loadCategories() {
     this.categoryService.getCategories().subscribe({
       next: (response: any) => {
-  
-        // Ensure we extract categories from the `data` field
         if (response?.data && Array.isArray(response.data)) {
           this.categories = response.data;
-        console.log('Fetched categories:', this.categories); // Debugging
-
+          console.log('Fetched categories:', this.categories);
         } else {
           console.error('Unexpected category response format:', response);
           this.message = 'Error loading categories!';
@@ -55,7 +57,23 @@ export class AddProductComponent implements OnInit {
         this.message = 'Failed to load categories!';
       }
     });
-  } 
+  }
+
+  generateBarcode() {
+    const code = this.productForm.get('code')?.value;
+    if (code) {
+      this.barcode = code; // Store the barcode text
+      setTimeout(() => {
+        JsBarcode(this.barcodeCanvas.nativeElement, code, {
+          format: 'CODE128',
+          displayValue: true,
+          lineColor: '#000',
+          width: 2,
+          height: 50,
+        });
+      });
+    }
+  }
 
   addProduct() {
     if (this.productForm.invalid) {
@@ -64,7 +82,6 @@ export class AddProductComponent implements OnInit {
     }
 
     const productData = this.productForm.getRawValue();
-
     console.log('Submitting Product:', productData);
 
     this.productService.createProduct(productData).subscribe({
@@ -72,16 +89,11 @@ export class AddProductComponent implements OnInit {
         console.log('Product added:', response);
         this.message = 'Product added successfully!';
         this.productForm.reset();
-        this.productForm.patchValue({ barcode: this.generateBarcode() }); // Reset barcode
       },
       error: (error) => {
         console.error('Error adding product:', error);
         this.message = 'Failed to add product!';
       }
     });
-  }
-
-  private generateBarcode(): string {
-    return 'BC' + Math.floor(Math.random() * 1000000).toString();
   }
 }
